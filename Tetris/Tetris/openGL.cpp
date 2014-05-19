@@ -108,6 +108,22 @@ namespace {
 	int tensuu;
 }
 
+int Judge(){
+	for (int i = 0; i < 4; i++){
+		for (int j = 0; j < 4; j++){
+			if (BlockMove[i][j] != 0){
+				if (hairetsu[1][i + x][j + y] != 0){
+					return 1;
+				}
+				if (x + i>10 || x + i<1 || y + j>20 || y + j < 0){
+					return 1;
+				}
+			}
+		}
+	}
+	return 0;
+}
+
 void HOLD(){
 	if (z3 == -1){
 		for (int i = 0; i < 4; i++){
@@ -132,6 +148,9 @@ void HOLD(){
 		z4 = z;
 		z = z3;
 		z3 = z4;
+	}
+	if (Judge() == 1){
+		HOLD();
 	}
 }
 
@@ -169,21 +188,7 @@ void SHOKIKA(){
 	tensuu = 0;
 }
 
-int Judge(){
-	for (int i = 0; i < 4; i++){
-		for (int j = 0; j < 4; j++){
-			if (BlockMove[i][j] != 0){
-				if (hairetsu[1][i + x][j + y] != 0){
-					return 1;
-				}
-				if (x + i>10 || x + i<1 || y + j>20 || y + j < 0){
-					return 1;
-				}
-			}
-		}
-	}
-	return 0;
-}
+
 
 void kaiten(int j){
 	switch (z){
