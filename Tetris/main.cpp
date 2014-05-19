@@ -16,5 +16,6 @@ int main(int argc, char** argv)
 	glutTimerFunc(500,timer,0); // タイマー。１つ目の引数はミリ秒。最後の引数はtimer()に渡す引数
 	glutIdleFunc(idle);
 	glClearColor(0.9, 0.9, 0.9, 1.0);
+	SHOKIKA();
 	glutMainLoop();
 }

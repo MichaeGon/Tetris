@@ -1,6 +1,9 @@
 #ifndef ___COMMONHEADER___
 #define ___COMMONHEADER___
 
+// 番兵
+const int SENTINEL = -1;
+
 // 色指定用列挙体
 enum color { Black, Gray, Aqua, Yellow, Green, Red, Blue, Orange, Purple };
 // 色配列
@@ -10,6 +13,13 @@ extern double colors2[][3];
 
 // タイトル
 extern char* title;
+
+// 数字集
+extern char* numbers;
+
+// スコア表示用
+// 引数はスコア(マイナスは考慮しない)
+void displayScore(int score);
 
 // マウス
 void mouse(int button, int state, int x, int y);
@@ -37,5 +47,8 @@ void idle();
 
 // リサイズ
 void resize(int w, int h);
+
+//初期化
+void SHOKIKA();
 
 #endif
