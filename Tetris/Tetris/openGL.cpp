@@ -1,9 +1,12 @@
 #include <cstdlib>
 #include <iostream>
 #include <ctime>
+#include <cstdlib>
 #include <GL/glut.h>
 #include "common.h"
 using namespace std;
+#define GLUT_SLEEP 13
+
 
 double colors[][3] = {
 	{ 0.2, 0.2, 0.2 },
@@ -14,7 +17,7 @@ double colors[][3] = {
 	{ 1.0, 0.0, 0.0 },
 	{ 0.0, 0.0, 1.0 },
 	{ 1.0, 0.64, 0.0 },
-	{ 0.31, 0.0, 0.31 }
+	{ 0.71, 0.0, 0.71 }
 };
 
 double colors2[][3] = {
@@ -26,10 +29,14 @@ double colors2[][3] = {
 	{ 0.9, 0.0, 0.0 },
 	{ 0.0, 0.0, 0.9 },
 	{ 0.9, 0.54, 0.0 },
-	{ 0.21, 0.0, 0.21 }
+	{ 0.51, 0.0, 0.51 }
 };
 
+
 char* title = "Tetris";
+
+char* numbers = "0123456789";
+
 
 // ブロックの大きさ
 const int size = 50;
@@ -44,25 +51,311 @@ const int frame = 2;
 
 namespace {
 	int crdnt = 0;
+
+	color hairetsu[2][12][22]; 
+	color c=(color)1,d=(color)0;
+	color Block[7][4][4];
+	color Block2[7][4][4] = {
+		{
+			{ d, d, d, d },
+			{ d, d, d, d },
+			{ c, c, c, c },
+			{ d, d, d, d },
+		},
+		{
+			{ d, d, d, d },
+			{ d, c, c, d },
+			{ d, c, c, d },
+			{ d, d, d, d },
+		},
+		{
+			{ d, d, d, d },
+			{ d, c, c, d },
+			{ c, c, d, d },
+			{ d, d, d, d },
+		},
+		{
+			{ d, d, d, d },
+			{ c, c, d, d },
+			{ d, c, c, d },
+			{ d, d, d, d },
+		},
+		{
+			{ c, d, d, d },
+			{ c, c, c, d },
+			{ d, d, d, d },
+			{ d, d, d, d },
+		},
+		{
+			{ d, d, c, d },
+			{ c, c, c, d },
+			{ d, d, d, d },
+			{ d, d, d, d },
+		},
+		{
+			{ d, c, d, d },
+			{ c, c, c, d },
+			{ d, d, d, d },
+			{ d, d, d, d },
+		}
+	};
+	color BlockMove[4][4];
+	color BlockHold[4][4];
+	color BlockHold2[4][4];
+	int dyuma_flag[10];
+	int x, y,z,z1=-1/*一つ前*/,z2=-1/*2つ前*/,z3=-1/*HOLD*/,z4/*移行関数*/;
+	int houkou;
+	int tensuu;
+}
+
+void HOLD(){
+	if (z3 == -1){
+		for (int i = 0; i < 4; i++){
+			for (int j = 0; j < 4; j++){
+				BlockHold[i][j] = BlockMove[i][j];
+					BlockMove[i][j] = Block[z1][i][j];
+			}
+		}
+		z3 = z;
+		z = z1;
+		z1 = z2;
+		z2 = rand() % 7;
+	}
+	else{
+		for (int i = 0; i < 4; i++){
+			for (int j = 0; j < 4; j++){
+				BlockHold2[i][j] = BlockHold[i][j];
+				BlockHold[i][j] = BlockMove[i][j];
+				BlockMove[i][j] = BlockHold2[i][j];
+			}
+		}
+		z4 = z;
+		z = z3;
+		z3 = z4;
+	}
+}
+
+void irekae(int i, int j){
+	BlockMove[i][j] = (color)(z+2 - BlockMove[i][j]);
+}
+
+void kaiten_2(){
+	color dyuma_color;
+	dyuma_color = BlockMove[0][0];
+	BlockMove[0][0] = BlockMove[0][2];
+	BlockMove[0][2] = BlockMove[2][2];
+	BlockMove[2][2] = BlockMove[2][0];
+	BlockMove[2][0] = dyuma_color;
+	dyuma_color = BlockMove[0][1];
+	BlockMove[0][1] = BlockMove[1][2];
+	BlockMove[1][2] = BlockMove[2][1];
+	BlockMove[2][1] = BlockMove[1][0];
+	BlockMove[1][0] = dyuma_color;
+}
+
+
+void SHOKIKA(){
+	srand((unsigned)time(NULL));
+
+	for (int i = 0; i < 7; i++){
+		for (int j = 0; j < 4; j++){
+			for (int k = 0; k < 4; k++){
+				if (Block2[i][j][k]){
+					Block[i][j][k] = (color)(i + 2);
+				}
+			}
+		}
+	}
+	tensuu = 0;
+}
+
+int Judge(){
+	for (int i = 0; i < 4; i++){
+		for (int j = 0; j < 4; j++){
+			if (BlockMove[i][j] != 0){
+				if (hairetsu[1][i + x][j + y] != 0){
+					return 1;
+				}
+				if (x + i>10 || x + i<1 || y + j>20 || y + j < 0){
+					return 1;
+				}
+			}
+		}
+	}
+	return 0;
+}
+
+void kaiten(int j){
+	switch (z){
+	case 0:irekae(0, 1);
+		irekae(1, 1);
+		irekae(3, 1);
+		irekae(2, 0);
+		irekae(2, 2);
+		irekae(2, 3);
+	case 1:
+		break;
+	default:
+		kaiten_2();
+		break;
+	}
+	if (Judge() == 1&&j!=1){
+		for (int i = 0; i < 3; i++){
+			kaiten(1);
+		}
+	}
+}
+
+void makeBlock(){
+	x = 4;
+	y = 0;
+	if (z1 == -1 || z2 == -1){
+		z1 = rand() % 7;
+		z2 = rand() % 7;
+	}
+	z = z1;
+	z1 = z2;
+	z2 = rand() % 7;
+	cout <<z<<" "<< z1 << " " << z2<<"\n";
+	for (int i = 0; i < 4; i++){
+		for (int j = 0; j < 4; j++){
+			BlockMove[i][j] = Block[z][i][j];
+		}
+	}
+	if (Judge() == 1){
+		cout << "GameOver!" << "\n" << tensuu << "点でした！";
+		exit(0);
+	}
+	dyuma_flag[0] = 1;
+}
+
+void kurikaeshi(int j){
+	int flag3=0;
+	for (int i = 1; i <= 10; i++){
+		if (hairetsu[0][i][j] != 0){
+			flag3++;
+		}
+	}
+	if (flag3 == 10){
+		dyuma_flag[2]++;
+		kurikaeshi(j-1);
+	}
+}
+
+int tensuukeisann(int i){
+	if (i == 1){
+		return 1;
+	}
+	else{
+		return tensuukeisann(i - 1)*2;
+	}
+}
+
+void Del_Judge(){
+	dyuma_flag[2] = 0;
+	dyuma_flag[3] = 20;
+	for (int j = 20; j >= 1 + dyuma_flag[2]; j--){
+		
+		if (dyuma_flag[2]+j <=  dyuma_flag[3]){
+			kurikaeshi(j);
+			dyuma_flag[3] = j;
+		}
+		for (int k = 1; k <= 10; k++){
+			hairetsu[0][k][j] = hairetsu[0][k][j - dyuma_flag[2]];
+			hairetsu[1][k][j] = hairetsu[1][k][j - dyuma_flag[2]];
+		}
+	}
+	if (dyuma_flag[2] != 0){
+		tensuu += tensuukeisann(dyuma_flag[2])*10;
+	}
+	cout << "\n" << tensuu;
+}
+
+int hantei(){
+	switch (houkou) {
+	case GLUT_KEY_UP: // 上キー
+		cout << "up\n";
+		kaiten(0);
+		break;
+	case GLUT_KEY_DOWN: // 下キー
+	case GLUT_SLEEP: // 待キー
+		cout << "down\n";
+		if (dyuma_flag[0] == 0){
+			makeBlock();
+		}
+		else{
+			y++;
+			if (Judge() == 1){
+				y--;
+				/*固定化処理を入れる*/
+				for (int i = 0; i < 4; i++){
+					for (int j = 0; j < 4; j++){
+						if (BlockMove[i][j] != 0){
+							hairetsu[1][x + i][y + j] = BlockMove[i][j];
+						}
+					}
+				}
+				dyuma_flag[0] = 0;
+			}
+		}
+		break;
+	case GLUT_KEY_LEFT: // 左キー
+		cout << "left\n";
+		x--;
+		if (Judge() == 1){
+			x++;
+		}
+		break;
+	case GLUT_KEY_RIGHT: // 右キー
+		cout << "right\n";
+		x++;
+		if (Judge() == 1){
+			x--;
+		}
+		break;
+	case GLUT_KEY_F12:
+		HOLD();
+	default:
+		break;
+	}
+	
+	for (int i = 1; i <= 10; i++){
+		for (int j = 1; j <= 20; j++){
+			hairetsu[0][i][j] = hairetsu[1][i][j];
+		}
+	}
+	for (int i = 0; i < 4; i++){
+		for (int j = 0; j < 4; j++){
+			if (BlockMove[i][j]){
+				hairetsu[0][i + x][j + y] = BlockMove[i][j];
+			}
+		}
+	}
+	if (dyuma_flag[0] == 0){
+		Del_Judge(); 
+	}
+	return 0;
 }
 
 // ここに描画の処理を書く
 void display()
 {
-	glClear(GL_COLOR_BUFFER_BIT);
-	displayField();
+	if (hantei() == 0){
+		glClear(GL_COLOR_BUFFER_BIT);
+		displayField();
+		displayScore(tensuu); // 引数にスコアを渡してください
 
-	// ここに描画の処理を書く
+		// ここに描画の処理を書く
+		int i, j;
+		for (i = 1; i <= 10; i++){
+			for (j = 1; j <= 20; j++){
+				displayBlock(i - 1, j - 1, hairetsu[0][i][j]);
+			}
+		}
+		
 
-	displayBlock(0, crdnt, Aqua); // サンプルAqua
-	displayBlock(1, crdnt + 1, Yellow); //サンプルYellow
-	displayBlock(2, crdnt + 2, Green); // サンプルGreen
-	displayBlock(3, crdnt + 3, Red); // サンプルRed
-	displayBlock(4, crdnt + 4, Blue); // サンプルBlue
-	displayBlock(5, crdnt + 5, Orange); // サンプルOrange
-	displayBlock(6, crdnt + 6, Purple); // サンプルPurple
-
-	glutSwapBuffers();
+		glutSwapBuffers();
+	}
 }
 
 // ここにアニメーション処理や時間経過による再描画処理を書く
@@ -76,6 +369,7 @@ void timer(int value)
 	}
 	glutTimerFunc(500, timer, 0); // 次のタイマー
 
+	houkou = GLUT_SLEEP;
 	glutPostRedisplay(); // いじらないこと
 }
 
@@ -156,13 +450,11 @@ void keyboard(unsigned char key, int x, int y)
 // 特殊キーが押されたときの挙動を書く
 void keyboard2(int key, int x, int y)
 {
-	switch (key) {
+/*	switch (key) {
 	case GLUT_KEY_UP: // 上キー
 		break;
 	case GLUT_KEY_DOWN: // 下キー
 		cout << "down\n";
-		++crdnt;
-		glutPostRedisplay();
 		break;
 	case GLUT_KEY_LEFT: // 左キー
 		break;
@@ -170,5 +462,60 @@ void keyboard2(int key, int x, int y)
 		break;
 	default:
 		break;
+	}
+*/
+	houkou = key;
+	glutPostRedisplay();
+}
+
+
+// スコア表示用
+// 引数はスコア
+void displayScore(int score)
+{
+	glColor3dv(colors[Black]);
+	glRasterPos2d(size * 3 / 5, size);
+	for (char* str = title; *str; str++) {
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *str);
+	}
+
+	int pos = 5;
+	for (int i = 0; i < width; i += width - 2) {
+		glBegin(GL_LINES);
+		glVertex2d((i + 1.0 / 2.0)*size, pos*size);
+		glVertex2d((i + 1.0 / 2.0)*size, (pos + 3)*size);
+		glEnd();
+	}
+
+	glBegin(GL_LINES);
+	glVertex2d((width - 1.5)*size, pos*size);
+	glVertex2d((width - 1.5)*size, (pos - 0.5)*size);
+	glVertex2d((width - 1.5)*size, (pos - 0.5)*size);
+	glVertex2d((width - 2.5)*size, (pos - 0.5)*size);
+	glVertex2d(size / 2.0, (pos + 3)*size);
+	glVertex2d((width - 1.5)*size, (pos + 3)*size);
+	glEnd();
+
+	glRasterPos2d(size, (pos - 1.0 / 5.0)*size);
+	for (char* str = "SCORE"; *str; str++) {
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *str);
+	}
+
+	int num[size] = { 0 };
+	for (int i = 1; i < size; i++) {
+		num[i] = SENTINEL;
+	}
+	int i;
+	for (i = 0; score; i++) {
+		num[i] = score % 10;
+		score /= 10;
+	}
+	if (i) {
+		i--;
+	}
+	
+	glRasterPos2d(size * 2, (pos + 9.0 / 5.0)*size);
+	while (i >= 0) {
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, numbers[num[i--]]);
 	}
 }
