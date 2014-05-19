@@ -100,10 +100,58 @@ namespace {
 		}
 	};
 	color BlockMove[4][4];
+	color BlockHold[4][4];
+	color BlockHold2[4][4];
 	int dyuma_flag[10];
-	int x, y,z;
+	int x, y,z,z1=-1/*一つ前*/,z2=-1/*2つ前*/,z3=-1/*HOLD*/,z4/*移行関数*/;
 	int houkou;
 	int tensuu;
+}
+
+int Judge(){
+	for (int i = 0; i < 4; i++){
+		for (int j = 0; j < 4; j++){
+			if (BlockMove[i][j] != 0){
+				if (hairetsu[1][i + x][j + y] != 0){
+					return 1;
+				}
+				if (x + i>10 || x + i<1 || y + j>20 || y + j < 0){
+					return 1;
+				}
+			}
+		}
+	}
+	return 0;
+}
+
+void HOLD(){
+	if (z3 == -1){
+		for (int i = 0; i < 4; i++){
+			for (int j = 0; j < 4; j++){
+				BlockHold[i][j] = BlockMove[i][j];
+					BlockMove[i][j] = Block[z1][i][j];
+			}
+		}
+		z3 = z;
+		z = z1;
+		z1 = z2;
+		z2 = rand() % 7;
+	}
+	else{
+		for (int i = 0; i < 4; i++){
+			for (int j = 0; j < 4; j++){
+				BlockHold2[i][j] = BlockHold[i][j];
+				BlockHold[i][j] = BlockMove[i][j];
+				BlockMove[i][j] = BlockHold2[i][j];
+			}
+		}
+		z4 = z;
+		z = z3;
+		z3 = z4;
+	}
+	if (Judge() == 1){
+		HOLD();
+	}
 }
 
 void irekae(int i, int j){
@@ -140,21 +188,7 @@ void SHOKIKA(){
 	tensuu = 0;
 }
 
-int Judge(){
-	for (int i = 0; i < 4; i++){
-		for (int j = 0; j < 4; j++){
-			if (BlockMove[i][j] != 0){
-				if (hairetsu[1][i + x][j + y] != 0){
-					return 1;
-				}
-				if (x + i>10 || x + i<1 || y + j>20 || y + j < 0){
-					return 1;
-				}
-			}
-		}
-	}
-	return 0;
-}
+
 
 void kaiten(int j){
 	switch (z){
@@ -180,7 +214,14 @@ void kaiten(int j){
 void makeBlock(){
 	x = 4;
 	y = 0;
-	z = rand() % 7;
+	if (z1 == -1 || z2 == -1){
+		z1 = rand() % 7;
+		z2 = rand() % 7;
+	}
+	z = z1;
+	z1 = z2;
+	z2 = rand() % 7;
+	cout <<z<<" "<< z1 << " " << z2<<"\n";
 	for (int i = 0; i < 4; i++){
 		for (int j = 0; j < 4; j++){
 			BlockMove[i][j] = Block[z][i][j];
@@ -277,6 +318,8 @@ int hantei(){
 			x--;
 		}
 		break;
+	case GLUT_KEY_F12:
+		HOLD();
 	default:
 		break;
 	}
@@ -305,7 +348,7 @@ void display()
 	if (hantei() == 0){
 		glClear(GL_COLOR_BUFFER_BIT);
 		displayField();
-		displayScore(0); // 引数にスコアを渡してください
+		displayScore(tensuu); // 引数にスコアを渡してください
 
 		// ここに描画の処理を書く
 		int i, j;

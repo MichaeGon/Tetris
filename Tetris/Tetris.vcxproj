@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{2C1D3EAE-6B0E-4787-8FCC-830C68EE4704}</ProjectGuid>
+    <ProjectGuid>{3EBB76CA-278F-4F66-A8D4-8EFD1DE35C56}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Tetris</RootNamespace>
   </PropertyGroup>
@@ -81,8 +81,8 @@
     <ClInclude Include="common.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="openGL.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="openGL.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
