@@ -107,6 +107,7 @@ namespace {
 	int houkou;
 	int tensuu;
 	int counter;
+	int counter2;
 }
 
 int Judge(){
@@ -126,33 +127,34 @@ int Judge(){
 }
 
 void HOLD(){
-	if (z3 == -1){
-		for (int i = 0; i < 4; i++){
-			for (int j = 0; j < 4; j++){
-				BlockHold[i][j] = BlockMove[i][j];
+	counter2 = counter;
+		if (z3 == -1){
+			for (int i = 0; i < 4; i++){
+				for (int j = 0; j < 4; j++){
+					BlockHold[i][j] = BlockMove[i][j];
 					BlockMove[i][j] = Block[z1][i][j];
+				}
 			}
+			z3 = z;
+			z = z1;
+			z1 = z2;
+			z2 = rand() % 7;
 		}
-		z3 = z;
-		z = z1;
-		z1 = z2;
-		z2 = rand() % 7;
-	}
-	else{
-		for (int i = 0; i < 4; i++){
-			for (int j = 0; j < 4; j++){
-				BlockHold2[i][j] = BlockHold[i][j];
-				BlockHold[i][j] = BlockMove[i][j];
-				BlockMove[i][j] = BlockHold2[i][j];
+		else{
+			for (int i = 0; i < 4; i++){
+				for (int j = 0; j < 4; j++){
+					BlockHold2[i][j] = BlockHold[i][j];
+					BlockHold[i][j] = BlockMove[i][j];
+					BlockMove[i][j] = BlockHold2[i][j];
+				}
 			}
+			z4 = z;
+			z = z3;
+			z3 = z4;
 		}
-		z4 = z;
-		z = z3;
-		z3 = z4;
-	}
-	if (Judge() == 1){
-		HOLD();
-	}
+		if (Judge() == 1){
+			HOLD();
+		}
 }
 
 void irekae(int i, int j){
@@ -188,6 +190,7 @@ void SHOKIKA(){
 	}
 	tensuu = 0;
 	counter = 0;
+	counter2 = 0;
 }
 
 
@@ -335,7 +338,9 @@ int hantei(){
 		}
 		break;
 	case GLUT_KEY_F12:
-		HOLD();
+		if (counter2 < counter){
+			HOLD();
+		}
 	default:
 		break;
 	}
