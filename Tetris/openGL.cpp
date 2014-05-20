@@ -505,7 +505,7 @@ void displayScore(int score)
 		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *str);
 	}
 
-	int pos = 5;
+	int pos = 7;
 	for (int i = 0; i < width; i += width - 2) {
 		glBegin(GL_LINES);
 		glVertex2d((i + 1.0 / 2.0)*size, pos*size);
