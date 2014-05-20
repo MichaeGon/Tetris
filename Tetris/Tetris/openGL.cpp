@@ -106,6 +106,7 @@ namespace {
 	int x, y,z,z1=-1/*ˆê‚Â‘O*/,z2=-1/*2‚Â‘O*/,z3=-1/*HOLD*/,z4/*ˆÚsŠÖ”*/;
 	int houkou;
 	int tensuu;
+	int counter;
 }
 
 int Judge(){
@@ -186,6 +187,7 @@ void SHOKIKA(){
 		}
 	}
 	tensuu = 0;
+	counter = 0;
 }
 
 
@@ -221,7 +223,7 @@ void makeBlock(){
 	z = z1;
 	z1 = z2;
 	z2 = rand() % 7;
-	cout <<z<<" "<< z1 << " " << z2<<"\n";
+	cout <<counter<<"\n";
 	for (int i = 0; i < 4; i++){
 		for (int j = 0; j < 4; j++){
 			BlockMove[i][j] = Block[z][i][j];
@@ -232,6 +234,20 @@ void makeBlock(){
 		exit(0);
 	}
 	dyuma_flag[0] = 1;
+	counter++;
+	if (counter % 10 == 0){
+		for (int j = 1, r = rand() % 10+1; j <=20; j++){
+			for (int i = 1; i <= 10; i++){
+				hairetsu[1][i][j] = hairetsu[1][i][j+1];
+				if (j == 20){
+					if (r != i){
+						hairetsu[1][i][j] = (color)1;
+					}
+				}
+			}
+		}
+	}
+
 }
 
 void kurikaeshi(int j){
