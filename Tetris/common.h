@@ -21,6 +21,9 @@ extern char* numbers;
 // 引数はスコア(マイナスは考慮しない)
 void displayScore(int score);
 
+// HOLD表示用
+void displayHold(int num);
+
 // マウス
 void mouse(int button, int state, int x, int y);
 // キーボード(通常)

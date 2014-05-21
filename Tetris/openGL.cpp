@@ -337,7 +337,7 @@ int hantei(){
 			x--;
 		}
 		break;
-	case GLUT_KEY_F12:
+	case GLUT_KEY_F1:
 		if (counter2 < counter){
 			HOLD();
 		}
@@ -370,6 +370,7 @@ void display()
 		glClear(GL_COLOR_BUFFER_BIT);
 		displayField();
 		displayScore(tensuu); // 引数にスコアを渡してください
+		displayHold(z3);
 
 		// ここに描画の処理を書く
 		int i, j;
@@ -495,6 +496,32 @@ void keyboard2(int key, int x, int y)
 }
 
 
+void displayFrame(char* str, int pos, bool left)
+{
+	for (int i = 0; i < width; i += width - 2) {
+		glBegin(GL_LINES);
+		int tmp = left ? i : width + i;
+		glVertex2d((tmp + 1.0 / 2.0)*size, pos*size);
+		glVertex2d((tmp + 1.0 / 2.0)*size, (pos + 4)*size);
+		glEnd();
+	}
+
+	glBegin(GL_LINES);
+	int tmp = left ? width : width * 2;
+	glVertex2d((tmp - 1.5)*size, pos*size);
+	glVertex2d((tmp - 1.5)*size, (pos - 0.5)*size);
+	glVertex2d((tmp - 1.5)*size, (pos - 0.5)*size);
+	glVertex2d((tmp - 2.5)*size, (pos - 0.5)*size);
+	glVertex2d((tmp-width+1)*size / 2.0, (pos + 4)*size);
+	glVertex2d((tmp - 1.5)*size, (pos + 4)*size);
+	glEnd();
+
+	glRasterPos2d((tmp-width+1)*size, (pos - 1.0 / 5.0)*size);
+	for (; *str; str++) {
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *str);
+	}
+}
+
 // スコア表示用
 // 引数はスコア
 void displayScore(int score)
@@ -505,27 +532,8 @@ void displayScore(int score)
 		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *str);
 	}
 
-	int pos = 7;
-	for (int i = 0; i < width; i += width - 2) {
-		glBegin(GL_LINES);
-		glVertex2d((i + 1.0 / 2.0)*size, pos*size);
-		glVertex2d((i + 1.0 / 2.0)*size, (pos + 3)*size);
-		glEnd();
-	}
-
-	glBegin(GL_LINES);
-	glVertex2d((width - 1.5)*size, pos*size);
-	glVertex2d((width - 1.5)*size, (pos - 0.5)*size);
-	glVertex2d((width - 1.5)*size, (pos - 0.5)*size);
-	glVertex2d((width - 2.5)*size, (pos - 0.5)*size);
-	glVertex2d(size / 2.0, (pos + 3)*size);
-	glVertex2d((width - 1.5)*size, (pos + 3)*size);
-	glEnd();
-
-	glRasterPos2d(size, (pos - 1.0 / 5.0)*size);
-	for (char* str = "SCORE"; *str; str++) {
-		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *str);
-	}
+	int pos = 11;
+	displayFrame("SCORE", pos, true);
 
 	int num[size] = { 0 };
 	for (int i = 1; i < size; i++) {
@@ -543,5 +551,24 @@ void displayScore(int score)
 	glRasterPos2d(size * 2, (pos + 9.0 / 5.0)*size);
 	while (i >= 0) {
 		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, numbers[num[i--]]);
+	}
+}
+
+void displayHold(int num)
+{
+	int pos = 5;
+	displayFrame("HOLD", pos, true);
+	if (num >= 0 && num <= 8) {
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				if (Block[num][i][j] == Black) {
+					// ブロック以外は表示しない
+					continue;
+				}
+				else {
+					displayBlock(j - 8, i + pos-1, Block[num][i][j]);
+				}
+			}
+		}
 	}
 }
