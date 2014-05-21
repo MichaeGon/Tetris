@@ -371,6 +371,7 @@ void display()
 		displayField();
 		displayScore(tensuu); // 引数にスコアを渡してください
 		displayHold(z3);
+		displayNext(z1, z2);
 
 		// ここに描画の処理を書く
 		int i, j;
@@ -496,24 +497,25 @@ void keyboard2(int key, int x, int y)
 }
 
 
-void displayFrame(char* str, int pos, bool left)
+void displayFrame(char* str, int pos, bool left, bool big)
 {
+	glColor3dv(colors[Black]);
 	for (int i = 0; i < width; i += width - 2) {
 		glBegin(GL_LINES);
-		int tmp = left ? i : width + i;
+		int tmp = left ? i : width * 2 + 2 + i;
 		glVertex2d((tmp + 1.0 / 2.0)*size, pos*size);
-		glVertex2d((tmp + 1.0 / 2.0)*size, (pos + 4)*size);
+		glVertex2d((tmp + 1.0 / 2.0)*size, (pos + (big ? 10 : 4))*size);
 		glEnd();
 	}
 
 	glBegin(GL_LINES);
-	int tmp = left ? width : width * 2;
+	int tmp = left ? width : width * 3 + 2;
 	glVertex2d((tmp - 1.5)*size, pos*size);
 	glVertex2d((tmp - 1.5)*size, (pos - 0.5)*size);
 	glVertex2d((tmp - 1.5)*size, (pos - 0.5)*size);
 	glVertex2d((tmp - 2.5)*size, (pos - 0.5)*size);
-	glVertex2d((tmp-width+1)*size / 2.0, (pos + 4)*size);
-	glVertex2d((tmp - 1.5)*size, (pos + 4)*size);
+	glVertex2d((tmp-width + (left ? 1 : 0.5))*size / (left ? 2.0 : 1), (pos + (big ? 10 : 4))*size);
+	glVertex2d((tmp - 1.5)*size, (pos + (big ? 10 : 4))*size);
 	glEnd();
 
 	glRasterPos2d((tmp-width+1)*size, (pos - 1.0 / 5.0)*size);
@@ -533,7 +535,7 @@ void displayScore(int score)
 	}
 
 	int pos = 11;
-	displayFrame("SCORE", pos, true);
+	displayFrame("SCORE", pos, true, false);
 
 	int num[size] = { 0 };
 	for (int i = 1; i < size; i++) {
@@ -557,16 +559,41 @@ void displayScore(int score)
 void displayHold(int num)
 {
 	int pos = 5;
-	displayFrame("HOLD", pos, true);
+	displayFrame("HOLD", pos, true, false);
 	if (num >= 0 && num <= 8) {
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
-				if (Block[num][i][j] == Black) {
-					// ブロック以外は表示しない
-					continue;
+				if (Block[num][i][j] != Black) {
+					displayBlock(j - 8, i + pos - 1, Block[num][i][j]);
 				}
-				else {
-					displayBlock(j - 8, i + pos-1, Block[num][i][j]);
+			}
+		}
+	}
+}
+
+void displayNext(int next1, int next2)
+{
+	int pos = 5;
+	displayFrame("NEXT", pos, false, true);
+	glColor3dv(colors[Black]);
+	glRasterPos2d((width*2 + 3)*size, (pos + 2)*size);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, numbers[1]);
+	if ((next1 >= 0 && next1 <= 8) || (next2 >= 0 && next2 <= 8)) {
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				if (Block[next1][i][j] != Black) {
+					displayBlock(j + width*1.4, i + pos - 1, Block[next1][i][j]);
+				}
+			}
+		}
+		pos += 4;
+		glColor3dv(colors[Black]);
+		glRasterPos2d((width * 2 + 3)*size, (pos + 2)*size);
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, numbers[2]);
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				if (Block[next2][i][j] != Black) {
+					displayBlock(j + width*1.4, i + pos - 1, Block[next2][i][j]);
 				}
 			}
 		}

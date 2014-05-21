@@ -24,6 +24,9 @@ void displayScore(int score);
 // HOLD表示用
 void displayHold(int num);
 
+// NEXT表示用
+void displayNext(int next1, int next2);
+
 // マウス
 void mouse(int button, int state, int x, int y);
 // キーボード(通常)
