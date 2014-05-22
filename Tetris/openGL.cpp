@@ -408,7 +408,7 @@ void idle()
 
 void drawBlock(int x, int y, color color, bool fill)
 {
-	glColor3dv(colors2[color]);
+	glColor3dv((fill ? colors2[color] : colors[color]));
 	glBegin(GL_QUADS);
 	glVertex2d((width + frame / 2 + x)*size, (frame / 2 + y)*size);
 	glVertex2d((width + frame / 2 + x + 1)*size, (frame / 2 + y)*size);
