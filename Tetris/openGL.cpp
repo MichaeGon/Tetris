@@ -406,9 +406,7 @@ void idle()
 
 }
 
-
-// ブロックをx,yにcolor色で描画("フィールドの"左上が原点)
-void displayBlock(int x, int y, color color)
+void drawBlock(int x, int y, color color, bool fill)
 {
 	glColor3dv(colors2[color]);
 	glBegin(GL_QUADS);
@@ -417,13 +415,24 @@ void displayBlock(int x, int y, color color)
 	glVertex2d((width + frame / 2 + x + 1)*size, (frame / 2 + y + 1)*size);
 	glVertex2d((width + frame / 2 + x)*size, (frame / 2 + y + 1)*size);
 	glEnd();
-	glColor3dv(colors[color]);
+	glColor3dv(colors[(fill ? color : Black)]);
 	glBegin(GL_QUADS);
 	glVertex2d((width + frame / 2 + x + 0.1)*size, (frame / 2 + y + 0.1)*size);
 	glVertex2d((width + frame / 2 + x + 0.9)*size, (frame / 2 + y + 0.1)*size);
 	glVertex2d((width + frame / 2 + x + 0.9)*size, (frame / 2 + y + 0.9)*size);
 	glVertex2d((width + frame / 2 + x + 0.1)*size, (frame / 2 + y + 0.9)*size);
 	glEnd();
+}
+
+// ブロックをx,yにcolor色で描画("フィールドの"左上が原点)
+void displayBlock(int x, int y, color color)
+{
+	drawBlock(x, y, color, true);
+}
+
+void displayGhostBlock(int x, int y, color color)
+{
+	drawBlock(x, y, color, false);
 }
 
 void displayField()

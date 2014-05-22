@@ -36,6 +36,8 @@ void keyboard2(int key, int x, int y);
 
 // ブロック描画(左上原点)
 void displayBlock(int x, int y, color color);
+// ゴーストブロック描画(左上原点)
+void displayGhostBlock(int x, int y, color color);
 
 // フィールド描画
 void displayField();
