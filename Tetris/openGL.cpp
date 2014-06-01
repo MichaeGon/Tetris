@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include <cstdarg>
 #include <iostream>
 #include <ctime>
 #include <cstdlib>
@@ -45,6 +46,9 @@ const int height = 20;
 
 // 余白
 const int frame = 2;
+
+// z_R[]の要素数
+const unsigned zrnum = 3;
 
 namespace {
 	char* numbers = "0123456789";
@@ -98,7 +102,7 @@ namespace {
 	};
 	int BlockMove[4][4];
 	int dyuma_flag[10];
-	int z_R[3] = { SENTINEL, SENTINEL, SENTINEL }; //Right.　待機ブロックを記憶。
+	int z_R[zrnum] = { SENTINEL, SENTINEL, SENTINEL }; //Right.　待機ブロックを記憶。
 	int z_L = SENTINEL;    //Left.   HOLDを記憶。
 	int z_C = SENTINEL;    //center. BlockMoveを記憶。
 	int x, y;//BlockMoveの座標を記憶。
@@ -471,7 +475,7 @@ void displayFrame(char* str, int pos, bool left, bool big)
 		glBegin(GL_LINES);
 		int tmp = left ? i : width * 2 + 2 + i;
 		glVertex2d((tmp + 1.0 / 2.0)*size, pos*size);
-		glVertex2d((tmp + 1.0 / 2.0)*size, (pos + package*(big ? 3 : 1))*size);
+		glVertex2d((tmp + 1.0 / 2.0)*size, (pos + package*(big ? zrnum : 1))*size);
 		glEnd();
 	}
 
@@ -481,8 +485,8 @@ void displayFrame(char* str, int pos, bool left, bool big)
 	glVertex2d((tmp - 1.5)*size, (pos - 0.5)*size);
 	glVertex2d((tmp - 1.5)*size, (pos - 0.5)*size);
 	glVertex2d((tmp - 2.5)*size, (pos - 0.5)*size);
-	glVertex2d((tmp-width + (left ? 1 : 0.5))*size / (left ? 2.0 : 1), (pos + package*(big ? 3 : 1))*size);
-	glVertex2d((tmp - 1.5)*size, (pos + (big ? 12 : 4))*size);
+	glVertex2d((tmp-width + (left ? 1 : 0.5))*size / (left ? 2.0 : 1), (pos + package*(big ? zrnum : 1))*size);
+	glVertex2d((tmp - 1.5)*size, (pos + package*(big ? zrnum : 1))*size);
 	glEnd();
 
 	glRasterPos2d((tmp-width+1)*size, (pos - 1.0 / 5.0)*size);
@@ -553,14 +557,21 @@ void omitNext(int next, int num)
 	}
 }
 
-void displayNext(int next1, int next2, int next3)
+void displayNext(int next, ...)
 {
-	int pos = 5;
-	displayFrame("NEXT", pos, false, true);
-	if ((next1 >= Black && next1 < Invalid) || (next2 >= 0 && next2 < Invalid) || (next3>=Black && next3 < Invalid)) {
-		int num = 0;
-		omitNext(next1, ++num);
-		omitNext(next2, ++num);
-		omitNext(next3, ++num);
+	int i = 1;
+	if (next >= Black && next < Invalid) {
+		omitNext(next, i);
 	}
+
+	va_list ap;
+
+	for (va_start(ap, next); i < zrnum; i++) {
+		int arg = va_arg(ap, int);
+		if (arg >= Black && arg < Invalid) {
+			omitNext(arg, i + 1);
+		}
+	}
+
+	displayFrame("NEXT", 5, false, true);
 }

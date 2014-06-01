@@ -23,7 +23,7 @@ void displayScore(int score);
 void displayHold(int num);
 
 // NEXT表示用
-void displayNext(int next1, int next2, int next3);
+void displayNext(int next, ...);
 
 // キーボード(通常)
 void keyboard(unsigned char key, int x, int y);
