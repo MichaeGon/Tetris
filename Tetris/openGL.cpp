@@ -430,9 +430,19 @@ void displayBlock(int x, int y, color color)
 	drawBlock(x, y, color, true);
 }
 
+void displayBlock(int x, int y, int colnum)
+{
+	drawBlock(x, y, static_cast<color>(colnum), true);
+}
+
 void displayGhostBlock(int x, int y, color color)
 {
 	drawBlock(x, y, color, false);
+}
+
+void displayGhostBlock(int x, int y, int colnum)
+{
+	drawBlock(x, y, static_cast<color>(colnum), false);
 }
 
 void displayField()
