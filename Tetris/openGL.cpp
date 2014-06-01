@@ -48,7 +48,7 @@ const int height = 20;
 const int frame = 2;
 
 // z_R[]の要素数
-const unsigned zrnum = 3;
+const unsigned zrnum = 1;
 
 namespace {
 	char* numbers = "0123456789";
@@ -102,7 +102,7 @@ namespace {
 	};
 	int BlockMove[4][4];
 	int dyuma_flag[10];
-	int z_R[zrnum] = { SENTINEL, SENTINEL, SENTINEL }; //Right.　待機ブロックを記憶。
+	int z_R[zrnum+1] = { SENTINEL }; //Right.　待機ブロックを記憶。
 	int z_L = SENTINEL;    //Left.   HOLDを記憶。
 	int z_C = SENTINEL;    //center. BlockMoveを記憶。
 	int x, y;//BlockMoveの座標を記憶。
@@ -140,9 +140,10 @@ void HOLD(){
 			}
 			z_L = z_C;
 			z_C = z_R[0];
-			z_R[0] = z_R[1];
-			z_R[1] = z_R[2];
-			z_R[2] = rand() % 7;
+			for (int i=0; i < zrnum-1; i++){
+				z_R[i] = z_R[i+1];
+			}
+			z_R[zrnum] = rand() % 7;
 		}
 		else{
 			for (int i = 0; i < 4; i++){
@@ -209,16 +210,17 @@ void kaiten(int j){
 void makeBlock(){
 	x = 4;
 	y = 0;
-	if (z_R[0] == SENTINEL || z_R[1] == SENTINEL || z_R[2] == SENTINEL){
+	if (z_R[0] == SENTINEL){
 		srand((unsigned)time(NULL));
-		for (int i = 0; i < 3; i++){
+		for (int i = 0; i <= zrnum; i++){
 			z_R[i] = rand() % 7;
 		}
 	}
 	z_C = z_R[0];
-	z_R[0] = z_R[1];
-	z_R[1] = z_R[2];
-	z_R[2] = rand() % 7;
+	for (int i = 0; i < zrnum; i++){
+		z_R[i] = z_R[i+1];
+	}
+	z_R[zrnum] = rand() % 7;
 	cout <<counter<<"\n";
 	for (int i = 0; i < 4; i++){
 		for (int j = 0; j < 4; j++){
