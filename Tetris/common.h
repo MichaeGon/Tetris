@@ -35,11 +35,10 @@ void keyboard(unsigned char key, int x, int y);
 void keyboard2(int key, int x, int y);
 
 // ブロック描画(左上原点)
-void displayBlock(int x, int y, color color);
-void displayBlock(int x, int y, int colnum);
+template <class Type> void displayBlock(int x, int y, Type col);
+
 // ゴーストブロック描画(左上原点)
-void displayGhostBlock(int x, int y, color color);
-void displayGhostBlock(int x, int y, int colnum);
+template <class Type> void displayGhostBlock(int x, int y, Type col);
 
 // フィールド描画
 void displayField();

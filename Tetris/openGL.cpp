@@ -425,25 +425,17 @@ void drawBlock(int x, int y, color color, bool fill)
 }
 
 // ブロックをx,yにcolor色で描画("フィールドの"左上が原点)
-void displayBlock(int x, int y, color color)
+template <class Type> void displayBlock(int x, int y, Type col)
 {
-	drawBlock(x, y, color, true);
+	drawBlock(x, y, static_cast<color>(col), true);
 }
 
-void displayBlock(int x, int y, int colnum)
+
+template <class Type> void displayGhostBlock(int x, int y, Type col)
 {
-	drawBlock(x, y, static_cast<color>(colnum), true);
+	drawBlock(x, y, static_cast<color>(col), false);
 }
 
-void displayGhostBlock(int x, int y, color color)
-{
-	drawBlock(x, y, color, false);
-}
-
-void displayGhostBlock(int x, int y, int colnum)
-{
-	drawBlock(x, y, static_cast<color>(colnum), false);
-}
 
 void displayField()
 {
