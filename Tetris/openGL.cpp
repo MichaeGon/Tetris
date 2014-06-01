@@ -180,23 +180,26 @@ void kaiten_2(){
 
 
 void kaiten(int j){
-	switch (z_C){
-	case 0:irekae(0, 1);
-		irekae(1, 1);
-		irekae(3, 1);
-		irekae(2, 0);
-		irekae(2, 2);
-		irekae(2, 3);
-	case 1:
-		break;
-	default:
-		kaiten_2();
-		break;
-	}
-	if (Judge() == 1&&j!=1){
-		for (int i = 0; i < 3; i++){
-			kaiten(1);
+	for (int i = 0; i < j; i++){
+		switch (z_C){
+		case 0:irekae(0, 1);
+			irekae(1, 1);
+			irekae(3, 1);
+			irekae(2, 0);
+			irekae(2, 2);
+			irekae(2, 3);
+		case 1:
+			break;
+		default:
+			kaiten_2();
+			break;
 		}
+	}
+	if (Judge() == 1&&j==1){
+			kaiten(3);
+	}
+	else if (Judge() == 1 && j == 3){
+		kaiten(1);
 	}
 }
 
@@ -288,10 +291,13 @@ void hantei(int houkou, int x0, int y0){
 		if (glutGetModifiers() & GLUT_ACTIVE_SHIFT) {
 			// シフトキーが押されている状態の時の挙動を書く
 			cout << "Shift + ";
-
+			kaiten(3);
+		}
+		else{
+			kaiten(1);
 		}
 		cout << "up\n";
-		kaiten(0);
+		
 		break;
 	case GLUT_KEY_DOWN: // 下キー
 	case GLUT_SLEEP: // 待キー
