@@ -99,10 +99,13 @@ namespace {
 	};
 	int BlockMove[4][4];
 	int dyuma_flag[10];
-	int x, y,z,z1=SENTINEL/*一つ前*/,z2=SENTINEL/*2つ前*/,z3=SENTINEL/*HOLD*/,z4/*移行関数*/;
-	int tensuu;
-	int counter;
-	int counter2;
+	int z_R[3] = { SENTINEL, SENTINEL, SENTINEL }; //Right.　待機ブロックを記憶。
+	int z_L = SENTINEL;    //Left.   HOLDを記憶。
+	int z_C = SENTINEL;    //center. BlockMoveを記憶。
+	int x, y;//BlockMoveの座標を記憶。
+	int tensuu;//点数を入れる変数。
+	int counter;//今落ちてるのは何個目のミノか。
+	int counter2;//ホールドされてるのは何個目のミノか。
 }
 
 int Judge(){
@@ -125,17 +128,18 @@ void HOLD(){
 	static int BlockHold[4][4];
 
 	counter2 = counter;
-		if (z3 == SENTINEL){
+		if (z_L == SENTINEL){
 			for (int i = 0; i < 4; i++){
 				for (int j = 0; j < 4; j++){
 					BlockHold[i][j] = BlockMove[i][j];
-					BlockMove[i][j] = Block[z1][i][j];
+					BlockMove[i][j] = Block[z_R[0]][i][j];
 				}
 			}
-			z3 = z;
-			z = z1;
-			z1 = z2;
-			z2 = rand() % 7;
+			z_L = z_C;
+			z_C = z_R[0];
+			z_R[0] = z_R[1];
+			z_R[1] = z_R[2];
+			z_R[2] = rand() % 7;
 		}
 		else{
 			for (int i = 0; i < 4; i++){
@@ -146,9 +150,10 @@ void HOLD(){
 					BlockMove[i][j] = BlockHold2;
 				}
 			}
-			z4 = z;
-			z = z3;
-			z3 = z4;
+			int p;//移行に用いる変数
+			p = z_C;
+			z_C = z_L;
+			z_L = p;
 		}
 		if (Judge() == 1){
 			HOLD();
@@ -156,7 +161,7 @@ void HOLD(){
 }
 
 void irekae(int i, int j){
-	BlockMove[i][j] = z+2 - BlockMove[i][j];
+	BlockMove[i][j] = z_C+2 - BlockMove[i][j];
 }
 
 void kaiten_2(){
@@ -175,7 +180,7 @@ void kaiten_2(){
 
 
 void kaiten(int j){
-	switch (z){
+	switch (z_C){
 	case 0:irekae(0, 1);
 		irekae(1, 1);
 		irekae(3, 1);
@@ -198,17 +203,20 @@ void kaiten(int j){
 void makeBlock(){
 	x = 4;
 	y = 0;
-	if (z1 == SENTINEL || z2 == SENTINEL){
-		z1 = rand() % 7;
-		z2 = rand() % 7;
+	if (z_R[0] == SENTINEL || z_R[1] == SENTINEL || z_R[2] == SENTINEL){
+		srand((unsigned)time(NULL));
+		for (int i = 0; i < 3; i++){
+			z_R[i] = rand() % 7;
+		}
 	}
-	z = z1;
-	z1 = z2;
-	z2 = rand() % 7;
+	z_C = z_R[0];
+	z_R[0] = z_R[1];
+	z_R[1] = z_R[2];
+	z_R[2] = rand() % 7;
 	cout <<counter<<"\n";
 	for (int i = 0; i < 4; i++){
 		for (int j = 0; j < 4; j++){
-			BlockMove[i][j] = Block[z][i][j];
+			BlockMove[i][j] = Block[z_C][i][j];
 		}
 	}
 	if (Judge() == 1){
@@ -304,16 +312,16 @@ void hantei(int houkou, int x0, int y0){
 		break;
 	case GLUT_KEY_LEFT: // 左キー
 		cout << "left\n";
-		x--;
+		x++;
 		if (Judge() == 1){
-			x++;
+			x--;
 		}
 		break;
 	case GLUT_KEY_RIGHT: // 右キー
 		cout << "right\n";
-		x++;
+		x--;
 		if (Judge() == 1){
-			x--;
+			x++;
 		}
 		break;
 	case GLUT_KEY_F1:
@@ -351,14 +359,14 @@ void display()
 	glClear(GL_COLOR_BUFFER_BIT);
 	displayField();
 	displayScore(tensuu); // 引数にスコアを渡してください
-	displayHold(z3);
-	displayNext(z1, z2);
+	displayHold(z_L);
+	displayNext(z_R[0], z_R[1]);
 
 	// ここに描画の処理を書く
 	int i, j;
 	for (i = 1; i <= 10; i++){
 		for (j = 1; j <= 20; j++){
-			displayBlock(i - 1, j - 1, hairetsu[0][i][j]);
+			displayBlock(10-i, j - 1, hairetsu[0][i][j]);
 		}
 	}
 
