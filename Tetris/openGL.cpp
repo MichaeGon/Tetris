@@ -285,6 +285,11 @@ void Del_Judge(){
 void hantei(int houkou, int x0, int y0){
 	switch (houkou) {
 	case GLUT_KEY_UP: // 上キー
+		if (glutGetModifiers() & GLUT_ACTIVE_SHIFT) {
+			// シフトキーが押されている状態の時の挙動を書く
+			cout << "Shift + ";
+
+		}
 		cout << "up\n";
 		kaiten(0);
 		break;
@@ -360,7 +365,7 @@ void display()
 	displayField();
 	displayScore(tensuu); // 引数にスコアを渡してください
 	displayHold(z_L);
-	displayNext(z_R[0], z_R[1]);
+	displayNext(z_R[0], z_R[1], z_R[2]);
 
 	// ここに描画の処理を書く
 	int i, j;
@@ -460,7 +465,7 @@ void displayFrame(char* str, int pos, bool left, bool big)
 		glBegin(GL_LINES);
 		int tmp = left ? i : width * 2 + 2 + i;
 		glVertex2d((tmp + 1.0 / 2.0)*size, pos*size);
-		glVertex2d((tmp + 1.0 / 2.0)*size, (pos + (big ? 10 : 4))*size);
+		glVertex2d((tmp + 1.0 / 2.0)*size, (pos + (big ? 12 : 4))*size);
 		glEnd();
 	}
 
@@ -470,8 +475,8 @@ void displayFrame(char* str, int pos, bool left, bool big)
 	glVertex2d((tmp - 1.5)*size, (pos - 0.5)*size);
 	glVertex2d((tmp - 1.5)*size, (pos - 0.5)*size);
 	glVertex2d((tmp - 2.5)*size, (pos - 0.5)*size);
-	glVertex2d((tmp-width + (left ? 1 : 0.5))*size / (left ? 2.0 : 1), (pos + (big ? 10 : 4))*size);
-	glVertex2d((tmp - 1.5)*size, (pos + (big ? 10 : 4))*size);
+	glVertex2d((tmp-width + (left ? 1 : 0.5))*size / (left ? 2.0 : 1), (pos + (big ? 12 : 4))*size);
+	glVertex2d((tmp - 1.5)*size, (pos + (big ? 12 : 4))*size);
 	glEnd();
 
 	glRasterPos2d((tmp-width+1)*size, (pos - 1.0 / 5.0)*size);
@@ -527,14 +532,14 @@ void displayHold(int num)
 	}
 }
 
-void displayNext(int next1, int next2)
+void displayNext(int next1, int next2, int next3)
 {
 	int pos = 5;
 	displayFrame("NEXT", pos, false, true);
 	glColor3dv(colors[Black]);
 	glRasterPos2d((width*2 + 3)*size, (pos + 2)*size);
 	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, numbers[1]);
-	if ((next1 >= 0 && next1 <= 8) || (next2 >= 0 && next2 <= 8)) {
+	if ((next1 >= 0 && next1 <= 8) || (next2 >= 0 && next2 <= 8) || (next3>=0 && next3<=8)) {
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
 				if (Block[next1][i][j] != Black) {
@@ -550,6 +555,17 @@ void displayNext(int next1, int next2)
 			for (int j = 0; j < 4; j++) {
 				if (Block[next2][i][j] != Black) {
 					displayBlock(j + width*1.4, i + pos - 1, Block[next2][i][j]);
+				}
+			}
+		}
+		pos += 4;
+		glColor3dv(colors[Black]);
+		glRasterPos2d((width * 2 + 3)*size, (pos + 2)*size);
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, numbers[3]);
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				if (Block[next3][i][j] != Black) {
+					displayBlock(j + width*1.4, i + pos - 1, Block[next3][i][j]);
 				}
 			}
 		}
