@@ -10,12 +10,9 @@ int main(int argc, char** argv)
 	glutCreateWindow(title);
 	glutDisplayFunc(display);
 	glutReshapeFunc(resize);
-	glutMouseFunc(mouse);
 	glutKeyboardFunc(keyboard);
-	glutSpecialFunc(keyboard2);
+	glutSpecialFunc(hantei);
 	glutTimerFunc(500,timer,0); // タイマー。１つ目の引数はミリ秒。最後の引数はtimer()に渡す引数
-	glutIdleFunc(idle);
 	glClearColor(0.9, 0.9, 0.9, 1.0);
-	SHOKIKA();
 	glutMainLoop();
 }

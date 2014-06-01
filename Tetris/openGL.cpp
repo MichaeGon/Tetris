@@ -35,8 +35,6 @@ double colors2[][3] = {
 
 char* title = "Tetris";
 
-char* numbers = "0123456789";
-
 
 // ブロックの大きさ
 const int size = 50;
@@ -50,61 +48,58 @@ const int height = 20;
 const int frame = 2;
 
 namespace {
+	char* numbers = "0123456789";
+
 	int crdnt = 0;
 
-	color hairetsu[2][12][22]; 
-	color c=(color)1,d=(color)0;
-	color Block[7][4][4];
-	color Block2[7][4][4] = {
+	int hairetsu[2][12][22]; 
+	int Block[7][4][4] = {
 		{
-			{ d, d, d, d },
-			{ d, d, d, d },
-			{ c, c, c, c },
-			{ d, d, d, d },
+			{ 0, 0, 0, 0 },
+			{ 0, 0, 0, 0 },
+			{ 2, 2, 2, 2 },
+			{ 0, 0, 0, 0 },
 		},
 		{
-			{ d, d, d, d },
-			{ d, c, c, d },
-			{ d, c, c, d },
-			{ d, d, d, d },
+			{ 0, 0, 0, 0 },
+			{ 0, 3, 3, 0 },
+			{ 0, 3, 3, 0 },
+			{ 0, 0, 0, 0 },
 		},
 		{
-			{ d, d, d, d },
-			{ d, c, c, d },
-			{ c, c, d, d },
-			{ d, d, d, d },
+			{ 0, 0, 0, 0 },
+			{ 0, 4, 4, 0 },
+			{ 4, 4, 0, 0 },
+			{ 0, 0, 0, 0 },
 		},
 		{
-			{ d, d, d, d },
-			{ c, c, d, d },
-			{ d, c, c, d },
-			{ d, d, d, d },
+			{ 0, 0, 0, 0 },
+			{ 5, 5, 0, 0 },
+			{ 0, 5, 5, 0 },
+			{ 0, 0, 0, 0 },
 		},
 		{
-			{ c, d, d, d },
-			{ c, c, c, d },
-			{ d, d, d, d },
-			{ d, d, d, d },
+			{ 6, 0, 0, 0 },
+			{ 6, 6, 6, 0 },
+			{ 0, 0, 0, 0 },
+			{ 0, 0, 0, 0 },
 		},
 		{
-			{ d, d, c, d },
-			{ c, c, c, d },
-			{ d, d, d, d },
-			{ d, d, d, d },
+			{ 0, 0, 7, 0 },
+			{ 7, 7, 7, 0 },
+			{ 0, 0, 0, 0 },
+			{ 0, 0, 0, 0 },
 		},
 		{
-			{ d, c, d, d },
-			{ c, c, c, d },
-			{ d, d, d, d },
-			{ d, d, d, d },
+			{ 0, 8, 0, 0 },
+			{ 8, 8, 8, 0 },
+			{ 0, 0, 0, 0 },
+			{ 0, 0, 0, 0 },
 		}
 	};
-	color BlockMove[4][4];
-	color BlockHold[4][4];
-	color BlockHold2[4][4];
+	int BlockMove[4][4];
 	int dyuma_flag[10];
-	int x, y,z,z1=-1/*一つ前*/,z2=-1/*2つ前*/,z3=-1/*HOLD*/,z4/*移行関数*/;
-	int houkou;
+	int x, y,z,z1=SENTINEL/*一つ前*/,z2=SENTINEL/*2つ前*/,z3=SENTINEL/*HOLD*/,z4/*移行関数*/;
 	int tensuu;
 	int counter;
 	int counter2;
@@ -127,8 +122,10 @@ int Judge(){
 }
 
 void HOLD(){
+	static int BlockHold[4][4];
+
 	counter2 = counter;
-		if (z3 == -1){
+		if (z3 == SENTINEL){
 			for (int i = 0; i < 4; i++){
 				for (int j = 0; j < 4; j++){
 					BlockHold[i][j] = BlockMove[i][j];
@@ -143,9 +140,10 @@ void HOLD(){
 		else{
 			for (int i = 0; i < 4; i++){
 				for (int j = 0; j < 4; j++){
-					BlockHold2[i][j] = BlockHold[i][j];
+					int BlockHold2;
+					BlockHold2 = BlockHold[i][j];
 					BlockHold[i][j] = BlockMove[i][j];
-					BlockMove[i][j] = BlockHold2[i][j];
+					BlockMove[i][j] = BlockHold2;
 				}
 			}
 			z4 = z;
@@ -158,11 +156,11 @@ void HOLD(){
 }
 
 void irekae(int i, int j){
-	BlockMove[i][j] = (color)(z+2 - BlockMove[i][j]);
+	BlockMove[i][j] = z+2 - BlockMove[i][j];
 }
 
 void kaiten_2(){
-	color dyuma_color;
+	int dyuma_color;
 	dyuma_color = BlockMove[0][0];
 	BlockMove[0][0] = BlockMove[0][2];
 	BlockMove[0][2] = BlockMove[2][2];
@@ -174,25 +172,6 @@ void kaiten_2(){
 	BlockMove[2][1] = BlockMove[1][0];
 	BlockMove[1][0] = dyuma_color;
 }
-
-
-void SHOKIKA(){
-	srand((unsigned)time(NULL));
-
-	for (int i = 0; i < 7; i++){
-		for (int j = 0; j < 4; j++){
-			for (int k = 0; k < 4; k++){
-				if (Block2[i][j][k]){
-					Block[i][j][k] = (color)(i + 2);
-				}
-			}
-		}
-	}
-	tensuu = 0;
-	counter = 0;
-	counter2 = 0;
-}
-
 
 
 void kaiten(int j){
@@ -219,7 +198,7 @@ void kaiten(int j){
 void makeBlock(){
 	x = 4;
 	y = 0;
-	if (z1 == -1 || z2 == -1){
+	if (z1 == SENTINEL || z2 == SENTINEL){
 		z1 = rand() % 7;
 		z2 = rand() % 7;
 	}
@@ -244,7 +223,7 @@ void makeBlock(){
 				hairetsu[1][i][j] = hairetsu[1][i][j+1];
 				if (j == 20){
 					if (r != i){
-						hairetsu[1][i][j] = (color)1;
+						hairetsu[1][i][j] = 1;
 					}
 				}
 			}
@@ -295,7 +274,7 @@ void Del_Judge(){
 	cout << "\n" << tensuu;
 }
 
-int hantei(){
+void hantei(int houkou, int x0, int y0){
 	switch (houkou) {
 	case GLUT_KEY_UP: // 上キー
 		cout << "up\n";
@@ -341,6 +320,7 @@ int hantei(){
 		if (counter2 < counter){
 			HOLD();
 		}
+		break;
 	default:
 		break;
 	}
@@ -360,30 +340,30 @@ int hantei(){
 	if (dyuma_flag[0] == 0){
 		Del_Judge(); 
 	}
-	return 0;
+	
+	glutPostRedisplay();
 }
 
 // ここに描画の処理を書く
 void display()
 {
-	if (hantei() == 0){
-		glClear(GL_COLOR_BUFFER_BIT);
-		displayField();
-		displayScore(tensuu); // 引数にスコアを渡してください
-		displayHold(z3);
-		displayNext(z1, z2);
 
-		// ここに描画の処理を書く
-		int i, j;
-		for (i = 1; i <= 10; i++){
-			for (j = 1; j <= 20; j++){
-				displayBlock(i - 1, j - 1, hairetsu[0][i][j]);
-			}
+	glClear(GL_COLOR_BUFFER_BIT);
+	displayField();
+	displayScore(tensuu); // 引数にスコアを渡してください
+	displayHold(z3);
+	displayNext(z1, z2);
+
+	// ここに描画の処理を書く
+	int i, j;
+	for (i = 1; i <= 10; i++){
+		for (j = 1; j <= 20; j++){
+			displayBlock(i - 1, j - 1, hairetsu[0][i][j]);
 		}
-		
-
-		glutSwapBuffers();
 	}
+
+
+	glutSwapBuffers();
 }
 
 // ここにアニメーション処理や時間経過による再描画処理を書く
@@ -397,13 +377,7 @@ void timer(int value)
 	}
 	glutTimerFunc(500, timer, 0); // 次のタイマー
 
-	houkou = GLUT_SLEEP;
-	glutPostRedisplay(); // いじらないこと
-}
-
-void idle()
-{
-
+	hantei(GLUT_SLEEP, SENTINEL, SENTINEL);
 }
 
 void drawBlock(int x, int y, color color, bool fill)
@@ -430,12 +404,10 @@ template <class Type> void displayBlock(int x, int y, Type col)
 	drawBlock(x, y, static_cast<color>(col), true);
 }
 
-
 template <class Type> void displayGhostBlock(int x, int y, Type col)
 {
 	drawBlock(x, y, static_cast<color>(col), false);
 }
-
 
 void displayField()
 {
@@ -459,19 +431,6 @@ void resize(int w, int h)
 	glOrtho(0, (width * 3 + frame)*size, (height + frame)*size, 0, -1, 1);
 }
 
-// マウスの挙動を書く
-void mouse(int button, int state, int x, int y)
-{
-	switch (button) {
-	case GLUT_LEFT_BUTTON:
-		break;
-	case GLUT_RIGHT_BUTTON:
-		break;
-	default:
-		break;
-	}
-}
-
 // キーボードの挙動を書く
 void keyboard(unsigned char key, int x, int y)
 {
@@ -485,28 +444,6 @@ void keyboard(unsigned char key, int x, int y)
 	}
 
 }
-
-// 特殊キーが押されたときの挙動を書く
-void keyboard2(int key, int x, int y)
-{
-/*	switch (key) {
-	case GLUT_KEY_UP: // 上キー
-		break;
-	case GLUT_KEY_DOWN: // 下キー
-		cout << "down\n";
-		break;
-	case GLUT_KEY_LEFT: // 左キー
-		break;
-	case GLUT_KEY_RIGHT: // 右キー
-		break;
-	default:
-		break;
-	}
-*/
-	houkou = key;
-	glutPostRedisplay();
-}
-
 
 void displayFrame(char* str, int pos, bool left, bool big)
 {

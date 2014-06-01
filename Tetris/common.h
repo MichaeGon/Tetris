@@ -14,9 +14,6 @@ extern double colors2[][3];
 // タイトル
 extern char* title;
 
-// 数字集
-extern char* numbers;
-
 // スコア表示用
 // 引数はスコア(マイナスは考慮しない)
 void displayScore(int score);
@@ -27,16 +24,13 @@ void displayHold(int num);
 // NEXT表示用
 void displayNext(int next1, int next2);
 
-// マウス
-void mouse(int button, int state, int x, int y);
 // キーボード(通常)
 void keyboard(unsigned char key, int x, int y);
 // キーボード(方向キーなど特殊キー)
-void keyboard2(int key, int x, int y);
+void hantei(int hantei, int x0, int y0);
 
 // ブロック描画(左上原点)
 template <class Type> void displayBlock(int x, int y, Type col);
-
 // ゴーストブロック描画(左上原点)
 template <class Type> void displayGhostBlock(int x, int y, Type col);
 
@@ -51,13 +45,7 @@ void display();
 // glutTimerFunc()のほうで時間などは指定する
 void timer(int value);
 
-// アニメーション
-void idle();
-
 // リサイズ
 void resize(int w, int h);
-
-//初期化
-void SHOKIKA();
 
 #endif
