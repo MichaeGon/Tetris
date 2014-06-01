@@ -5,7 +5,6 @@
 #include <GL/glut.h>
 #include "common.h"
 using namespace std;
-#define GLUT_SLEEP 13
 
 
 double colors[][3] = {
@@ -300,7 +299,6 @@ void hantei(int houkou, int x0, int y0){
 		
 		break;
 	case GLUT_KEY_DOWN: // 下キー
-	case GLUT_SLEEP: // 待キー
 		cout << "down\n";
 		if (dyuma_flag[0] == 0){
 			makeBlock();
@@ -396,7 +394,7 @@ void timer(int value)
 	}
 	glutTimerFunc(500, timer, 0); // 次のタイマー
 
-	hantei(GLUT_SLEEP, SENTINEL, SENTINEL);
+	hantei(GLUT_KEY_DOWN, SENTINEL, SENTINEL);
 }
 
 void drawBlock(int x, int y, color color, bool fill)
@@ -466,12 +464,14 @@ void keyboard(unsigned char key, int x, int y)
 
 void displayFrame(char* str, int pos, bool left, bool big)
 {
+	int package = 4;
+
 	glColor3dv(colors[Black]);
 	for (int i = 0; i < width; i += width - 2) {
 		glBegin(GL_LINES);
 		int tmp = left ? i : width * 2 + 2 + i;
 		glVertex2d((tmp + 1.0 / 2.0)*size, pos*size);
-		glVertex2d((tmp + 1.0 / 2.0)*size, (pos + (big ? 12 : 4))*size);
+		glVertex2d((tmp + 1.0 / 2.0)*size, (pos + package*(big ? 3 : 1))*size);
 		glEnd();
 	}
 
@@ -481,7 +481,7 @@ void displayFrame(char* str, int pos, bool left, bool big)
 	glVertex2d((tmp - 1.5)*size, (pos - 0.5)*size);
 	glVertex2d((tmp - 1.5)*size, (pos - 0.5)*size);
 	glVertex2d((tmp - 2.5)*size, (pos - 0.5)*size);
-	glVertex2d((tmp-width + (left ? 1 : 0.5))*size / (left ? 2.0 : 1), (pos + (big ? 12 : 4))*size);
+	glVertex2d((tmp-width + (left ? 1 : 0.5))*size / (left ? 2.0 : 1), (pos + package*(big ? 3 : 1))*size);
 	glVertex2d((tmp - 1.5)*size, (pos + (big ? 12 : 4))*size);
 	glEnd();
 
@@ -538,42 +538,29 @@ void displayHold(int num)
 	}
 }
 
+void omitNext(int next, int num)
+{
+	int interval = 4;
+	glColor3dv(colors[Black]);
+	glRasterPos2d((width * 2 + 3)*size, (interval*num + 3)*size);
+	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, numbers[num]);
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			if (Block[next][i][j] != Black) {
+				displayBlock(j + width*1.4, i + interval*num, Block[next][i][j]);
+			}
+		}
+	}
+}
+
 void displayNext(int next1, int next2, int next3)
 {
 	int pos = 5;
 	displayFrame("NEXT", pos, false, true);
-	glColor3dv(colors[Black]);
-	glRasterPos2d((width*2 + 3)*size, (pos + 2)*size);
-	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, numbers[1]);
-	if ((next1 >= 0 && next1 <= 8) || (next2 >= 0 && next2 <= 8) || (next3>=0 && next3<=8)) {
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 4; j++) {
-				if (Block[next1][i][j] != Black) {
-					displayBlock(j + width*1.4, i + pos - 1, Block[next1][i][j]);
-				}
-			}
-		}
-		pos += 4;
-		glColor3dv(colors[Black]);
-		glRasterPos2d((width * 2 + 3)*size, (pos + 2)*size);
-		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, numbers[2]);
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 4; j++) {
-				if (Block[next2][i][j] != Black) {
-					displayBlock(j + width*1.4, i + pos - 1, Block[next2][i][j]);
-				}
-			}
-		}
-		pos += 4;
-		glColor3dv(colors[Black]);
-		glRasterPos2d((width * 2 + 3)*size, (pos + 2)*size);
-		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, numbers[3]);
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 4; j++) {
-				if (Block[next3][i][j] != Black) {
-					displayBlock(j + width*1.4, i + pos - 1, Block[next3][i][j]);
-				}
-			}
-		}
+	if ((next1 >= Black && next1 < Invalid) || (next2 >= 0 && next2 < Invalid) || (next3>=Black && next3 < Invalid)) {
+		int num = 0;
+		omitNext(next1, ++num);
+		omitNext(next2, ++num);
+		omitNext(next3, ++num);
 	}
 }
