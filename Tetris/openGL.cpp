@@ -102,10 +102,10 @@ namespace {
 	int z_R[3] = { SENTINEL, SENTINEL, SENTINEL }; //Right.　待機ブロックを記憶。
 	int z_L = SENTINEL;    //Left.   HOLDを記憶。
 	int z_C = SENTINEL;    //center. BlockMoveを記憶。
-	int x, y,z,z1=SENTINEL/*一つ前*/,z2=SENTINEL/*2つ前*/,z3=SENTINEL/*HOLD*/,z4/*移行関数*/;
-	int tensuu;
-	int counter;
-	int counter2;
+	int x, y;//BlockMoveの座標を記憶。
+	int tensuu;//点数を入れる変数。
+	int counter;//今落ちてるのは何個目のミノか。
+	int counter2;//ホールドされてるのは何個目のミノか。
 }
 
 int Judge(){
