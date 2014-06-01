@@ -565,13 +565,13 @@ void displayNext(int next, ...)
 	}
 
 	va_list ap;
-
 	for (va_start(ap, next); i < zrnum; i++) {
 		int arg = va_arg(ap, int);
 		if (arg >= Black && arg < Invalid) {
 			omitNext(arg, i + 1);
 		}
 	}
+	va_end(ap);
 
 	displayFrame("NEXT", 5, false, true);
 }
