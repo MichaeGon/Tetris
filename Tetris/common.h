@@ -5,7 +5,7 @@
 const int SENTINEL = -1;
 
 // z_R[]の要素数
-const unsigned zrnum = 1;
+const unsigned zrnum = 3;
 
 // ブロックのデータ
 const int Block[][4][4] = {

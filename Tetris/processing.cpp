@@ -14,7 +14,7 @@ namespace {
 	int z_R[zrnum + 1] = { SENTINEL }; //Right.　待機ブロックを記憶。
 	int z_L = SENTINEL;    //Left.   HOLDを記憶。
 	int z_C = SENTINEL;    //center. BlockMoveを記憶。
-	int x, y;//BlockMoveの座標を記憶。
+	int x, y;//BlockMoveの座標を記憶。make
 	int tensuu;//点数を入れる変数。
 	int counter;//今落ちてるのは何個目のミノか。
 	int counter2;//ホールドされてるのは何個目のミノか。
@@ -142,6 +142,8 @@ void makeBlock(){
 	}
 	dyuma_flag[0] = 1;
 	counter++;
+	msec--;
+	cout << msec;
 	if (counter % 10 == 0){
 		for (int j = 1, r = rand() % 10 + 1; j <= 20; j++){
 			for (int i = 1; i <= 10; i++){
