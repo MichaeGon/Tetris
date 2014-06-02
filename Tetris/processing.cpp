@@ -95,12 +95,12 @@ void kaiten_2(){
 void kaiten(int j){
 	for (int i = 0; i < j; i++){
 		switch (z_C){
-		case 0:irekae(0, 1);
+		case 0:irekae(1, 0);
 			irekae(1, 1);
-			irekae(3, 1);
-			irekae(2, 0);
+			irekae(1, 3);
+			irekae(0, 2);
 			irekae(2, 2);
-			irekae(2, 3);
+			irekae(3, 2);
 		case 1:
 			break;
 		default:
@@ -108,11 +108,14 @@ void kaiten(int j){
 			break;
 		}
 	}
-	if (Judge() == 1 && j == 1){
-		kaiten(3);
-	}
-	else if (Judge() == 1 && j == 3){
-		kaiten(1);
+	dyuma_flag[6]++;
+	if (dyuma_flag[6] != 2){
+		if (Judge() == 1 && j == 1){
+			kaiten(3);
+		}
+		else if (Judge() == 1 && j == 3){
+			kaiten(1);
+		}
 	}
 }
 
@@ -133,7 +136,7 @@ void makeBlock(){
 	cout << counter << "\n";
 	for (int i = 0; i < 4; i++){
 		for (int j = 0; j < 4; j++){
-			BlockMove[i][j] = Block[z_C][i][j];
+			BlockMove[i][j] = Block[z_C][j][i];
 		}
 	}
 	if (Judge() == 1){
@@ -204,6 +207,7 @@ void Del_Judge(){
 void hantei(int houkou, int x0, int y0){
 	switch (houkou) {
 	case GLUT_KEY_UP: // 上キー
+		dyuma_flag[6] = 0;
 		if (glutGetModifiers() & GLUT_ACTIVE_SHIFT) {
 			// シフトキーが押されている状態の時の挙動を書く
 			cout << "Shift + ";
@@ -238,16 +242,16 @@ void hantei(int houkou, int x0, int y0){
 		break;
 	case GLUT_KEY_LEFT: // 左キー
 		cout << "left\n";
-		x++;
+		x--;
 		if (Judge() == 1){
-			x--;
+			x++;
 		}
 		break;
 	case GLUT_KEY_RIGHT: // 右キー
 		cout << "right\n";
-		x--;
+		x++;
 		if (Judge() == 1){
-			x++;
+			x--;
 		}
 		break;
 	case GLUT_KEY_F1:
@@ -264,6 +268,9 @@ void hantei(int houkou, int x0, int y0){
 			hairetsu[0][i][j] = hairetsu[1][i][j];
 		}
 	}
+
+	
+
 	for (int i = 0; i < 4; i++){
 		for (int j = 0; j < 4; j++){
 			if (BlockMove[i][j]){
@@ -275,6 +282,7 @@ void hantei(int houkou, int x0, int y0){
 		Del_Judge();
 	}
 
+	
 	glutPostRedisplay();
 
 }
@@ -291,7 +299,7 @@ void inner_display()
 	int i, j;
 	for (i = 1; i <= 10; i++){
 		for (j = 1; j <= 20; j++){
-			displayBlock(10 - i, j - 1, hairetsu[0][i][j]);
+			displayBlock(i-1, j - 1, hairetsu[0][i][j]);
 		}
 	}
 }
