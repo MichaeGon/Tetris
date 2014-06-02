@@ -1,6 +1,4 @@
 #include <cstdarg>
-#include <iostream>
-#include <ctime>
 #include <cstdlib>
 #include <GL/glut.h>
 #include "common.h"
@@ -82,7 +80,7 @@ void display()
 // ここにアニメーション処理や時間経過による再描画処理を書く
 void timer(int value)
 {
-	glutTimerFunc(500, timer, 0); // 次のタイマー
+	glutTimerFunc(msec, timer, 0); // 次のタイマー
 
 	hantei(GLUT_KEY_DOWN, SENTINEL, SENTINEL);
 }
@@ -235,10 +233,11 @@ void displayNext(int next, ...)
 	for (int i = 0; i < zrnum; i++) {
 		int arg = i ? va_arg(ap, int) : next;
 		if (arg >= Black && arg < Invalid) {
+			if (i == 0) {
+				displayFrame("NEXT", 5, false, true);
+			}
 			omitNext(arg, i + 1);
 		}
 	}
 	va_end(ap);
-
-	displayFrame("NEXT", 5, false, true);
 }

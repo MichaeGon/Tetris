@@ -60,6 +60,9 @@ enum color { Black, Gray, Aqua, Yellow, Green, Red, Blue, Orange, Purple, Invali
 // タイトル
 extern char* title;
 
+// 何ミリ秒ごとに落ちてくるか
+extern int msec;
+
 
 // 内部処理側で描画すべきものを入れる関数
 // スコアの表示、HOLDの表示、NEXTの表示とフィールド上のブロック描画を担当する。
@@ -74,10 +77,13 @@ void inner_display();
 void displayScore(int score);
 
 // HOLD表示用
+// 引数は上記のBlock[i][][]のiでブロックの形を指定
 void displayHold(int num);
 
 // NEXT表示用
-void displayNext(int next, ...);
+// 引数は次に落ちてくるブロック、その次に落ちてくるブロック・・・といくつも指定できる。
+// 引数に何も指定しなかった場合はnextが非表示になる
+void displayNext(int next = SENTINEL, ...);
 
 // キーボード(通常)
 void keyboard(unsigned char key, int x, int y);

@@ -5,6 +5,7 @@
 #include "common.h"
 using namespace std;
 
+int msec = 500;
 
 namespace {
 	int hairetsu[2][12][22];

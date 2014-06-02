@@ -12,7 +12,7 @@ int main(int argc, char** argv)
 	glutReshapeFunc(resize);
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(hantei);
-	glutTimerFunc(500,timer,0); // タイマー。１つ目の引数はミリ秒。最後の引数はtimer()に渡す引数
+	glutTimerFunc(msec,timer,SENTINEL); // タイマー。１つ目の引数はミリ秒。最後の引数はtimer()に渡す引数
 	glClearColor(0.9, 0.9, 0.9, 1.0);
 	glutMainLoop();
 }
