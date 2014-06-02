@@ -11,7 +11,7 @@ namespace {
 	int hairetsu[2][12][22];
 	int BlockMove[4][4];
 	int dyuma_flag[10];
-	int z_R[zrnum + 1] = { SENTINEL }; //Right.　待機ブロックを記憶。
+	int z_R[zrnum + 1] = { SENTINEL, SENTINEL, SENTINEL }; //Right.　待機ブロックを記憶。
 	int z_L = SENTINEL;    //Left.   HOLDを記憶。
 	int z_C = SENTINEL;    //center. BlockMoveを記憶。
 	int x, y;//BlockMoveの座標を記憶。make
