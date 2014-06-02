@@ -11,11 +11,6 @@ char* title = "Tetris";
 // ブロックの大きさ
 const int size = 50;
 
-// フィールドの横幅(ブロック何個分か)
-const int width = 10;
-// フィールドの縦幅(ブロック何個分か)
-const int height = 20;
-
 // 余白
 const int frame = 2;
 

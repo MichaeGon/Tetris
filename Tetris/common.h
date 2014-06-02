@@ -7,6 +7,11 @@ const int SENTINEL = -1;
 // z_R[]の要素数
 const unsigned zrnum = 3;
 
+// フィールドの横幅(ブロック何個分か)
+const int width = 10;
+// フィールドの縦幅(ブロック何個分か)
+const int height = 20;
+
 // ブロックのデータ
 const int Block[][4][4] = {
 	{

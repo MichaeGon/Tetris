@@ -295,10 +295,43 @@ void inner_display()
 	displayHold(z_L); // ホールド描画
 	displayNext(z_R[0], z_R[1], z_R[2]); // next描画
 
+	// ゴーストブロック表示テスト
+	int bottom = 20;
+	while (true) {
+		bool decide = true;
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				if ((BlockMove[i][j]>Black && j + bottom>20) || (hairetsu[0][i + x][j + bottom]>Black && BlockMove[i][j]>Black)) {
+					decide = false;
+					break;
+				}
+			}
+			if (!decide) {
+				break;
+			}
+		}
+		if (decide) {
+			break;
+		}
+		else {
+			bottom--;
+		}
+	}
+	if (y <= bottom) {
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				if (BlockMove[i][j] == Black) continue;
+
+				displayGhostBlock(i + x - 1, j + bottom - 1, BlockMove[i][j]);
+			}
+		}
+	}
+	
+
 	// フィールド上のブロック描画
-	int i, j;
-	for (i = 1; i <= 10; i++){
-		for (j = 1; j <= 20; j++){
+	for (int i = 1; i <= 10; i++){
+		for (int j = 1; j <= 20; j++){
+			if (hairetsu[0][i][j] == Black) continue;
 			displayBlock(i-1, j - 1, hairetsu[0][i][j]);
 		}
 	}
