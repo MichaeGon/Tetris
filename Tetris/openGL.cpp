@@ -16,7 +16,9 @@ double colors[][3] = {
 	{ 1.0, 0.0, 0.0 },
 	{ 0.0, 0.0, 1.0 },
 	{ 1.0, 0.64, 0.0 },
-	{ 0.71, 0.0, 0.71 }
+	{ 0.71, 0.0, 0.71 },
+	{ 0.0 , 0.0, 0.0 },
+	{ 0.5 , 0.5, 0.5 }
 };
 
 double colors2[][3] = {
@@ -28,7 +30,9 @@ double colors2[][3] = {
 	{ 0.9, 0.0, 0.0 },
 	{ 0.0, 0.0, 0.9 },
 	{ 0.9, 0.54, 0.0 },
-	{ 0.51, 0.0, 0.51 }
+	{ 0.51, 0.0, 0.51 },
+	{ 0.0 , 0.0, 0.0 },
+	{ 0.4, 0.4, 0.4 }
 };
 
 
@@ -47,14 +51,17 @@ const int height = 20;
 const int frame = 2;
 
 // z_R[]の要素数
-const unsigned zrnum = 1;
+const unsigned zrnum = 3;
+
+//ブロックの数
+const unsigned blnum = 9;
 
 namespace {
 	char* numbers = "0123456789";
 
 
 	int hairetsu[2][12][22]; 
-	int Block[7][4][4] = {
+	int Block[blnum][4][4] = {
 		{
 			{ 0, 0, 0, 0 },
 			{ 0, 0, 0, 0 },
@@ -96,6 +103,18 @@ namespace {
 			{ 8, 8, 8, 0 },
 			{ 0, 0, 0, 0 },
 			{ 0, 0, 0, 0 },
+		},
+		{
+			{ 0, 9, 9, 0 },
+			{ 9, 0, 0, 9 },
+			{ 9, 0, 0, 9 },
+			{ 0, 9, 9, 0 }
+		},
+		{
+			{ 10, 0, 0, 10 },
+			{ 0, 10, 10, 0 },
+			{ 0, 10, 10, 0 },
+			{ 10, 0, 0, 10 }
 		}
 	};
 	int BlockMove[4][4];
@@ -141,7 +160,7 @@ void HOLD(){
 			for (int i=0; i < zrnum-1; i++){
 				z_R[i] = z_R[i+1];
 			}
-			z_R[zrnum] = rand() % 7;
+			z_R[zrnum] = rand() % blnum;
 		}
 		else{
 			for (int i = 0; i < 4; i++){
@@ -191,6 +210,8 @@ void kaiten(int j){
 			irekae(2, 2);
 			irekae(2, 3);
 		case 1:
+		case 7:
+		case 8:
 			break;
 		default:
 			kaiten_2();
@@ -211,14 +232,14 @@ void makeBlock(){
 	if (z_R[0] == SENTINEL){
 		srand((unsigned)time(NULL));
 		for (int i = 0; i <= zrnum; i++){
-			z_R[i] = rand() % 7;
+			z_R[i] = rand() % blnum;
 		}
 	}
 	z_C = z_R[0];
 	for (int i = 0; i < zrnum; i++){
 		z_R[i] = z_R[i+1];
 	}
-	z_R[zrnum] = rand() % 7;
+	z_R[zrnum] = rand() % blnum;
 	cout <<counter<<"\n";
 	for (int i = 0; i < 4; i++){
 		for (int j = 0; j < 4; j++){
