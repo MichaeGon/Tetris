@@ -103,15 +103,25 @@ void drawBlock(int x, int y, color color, bool fill)
 	glEnd();
 }
 
-// ブロックをx,yにcolor色で描画("フィールドの"左上が原点)
-template <class Type> void displayBlock(int x, int y, Type col)
+
+void displayBlock(int x, int y, int col)
 {
 	drawBlock(x, y, static_cast<color>(col), true);
 }
 
-template <class Type> void displayGhostBlock(int x, int y, Type col)
+void displayBlock(int x, int y, color col)
+{
+	drawBlock(x, y, col, true);
+}
+
+void displayGhostBlock(int x, int y, int col)
 {
 	drawBlock(x, y, static_cast<color>(col), false);
+}
+
+void displayGhostBlock(int x, int y, color col)
+{
+	drawBlock(x, y, col, false);
 }
 
 void resize(int w, int h)

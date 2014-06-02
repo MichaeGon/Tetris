@@ -91,9 +91,14 @@ void keyboard(unsigned char key, int x, int y);
 void hantei(int hantei, int x0, int y0);
 
 // ブロック描画(左上原点)
-template <class Type> void displayBlock(int x, int y, Type col);
+// ３つ目の引数は色の指定。intかcolor型を指定できる
+void displayBlock(int x, int y, int col);
+void displayBlock(int x, int y, color col);
+
 // ゴーストブロック描画(左上原点)
-template <class Type> void displayGhostBlock(int x, int y, Type col);
+// ３つ目の引数は色の指定。intかcolor型を指定できる。
+void displayGhostBlock(int x, int y, int col);
+void displayGhostBlock(int x, int y, color col);
 
 // 描画の際に呼び出される関数
 void display();
