@@ -52,6 +52,20 @@ namespace {
 
 }
 
+void displayField()
+{
+	for (int i = -1; i <= width; ++i) {
+		for (int j = -1; j <= height; ++j) {
+			glColor3dv(colors[(i == -1 || j == -1 || i == width || j == height) ? Gray : Black]);
+			glBegin(GL_QUADS);
+			glVertex2d((width + frame / 2 + i)*size, (frame / 2 + j)*size);
+			glVertex2d((width + frame / 2 + i + 1)*size, (frame / 2 + j)*size);
+			glVertex2d((width + frame / 2 + i + 1)*size, (frame / 2 + j + 1)*size);
+			glVertex2d((width + frame / 2 + i)*size, (frame / 2 + j + 1)*size);
+			glEnd();
+		}
+	}
+}
 
 // ‚±‚±‚É•`‰æ‚Ìˆ—‚ð‘‚­
 void display()
@@ -100,21 +114,6 @@ template <class Type> void displayBlock(int x, int y, Type col)
 template <class Type> void displayGhostBlock(int x, int y, Type col)
 {
 	drawBlock(x, y, static_cast<color>(col), false);
-}
-
-void displayField()
-{
-	for (int i = -1; i <= width; ++i) {
-		for (int j = -1; j <= height; ++j) {
-			glColor3dv(colors[(i == -1 || j == -1 || i == width || j == height) ? Gray : Black]);
-			glBegin(GL_QUADS);
-			glVertex2d((width + frame / 2 + i)*size, (frame / 2 + j)*size);
-			glVertex2d((width + frame / 2 + i + 1)*size, (frame / 2 + j)*size);
-			glVertex2d((width + frame / 2 + i + 1)*size, (frame / 2 + j + 1)*size);
-			glVertex2d((width + frame / 2 + i)*size, (frame / 2 + j + 1)*size);
-			glEnd();
-		}
-	}
 }
 
 void resize(int w, int h)

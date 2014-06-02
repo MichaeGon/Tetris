@@ -89,9 +89,6 @@ template <class Type> void displayBlock(int x, int y, Type col);
 // ゴーストブロック描画(左上原点)
 template <class Type> void displayGhostBlock(int x, int y, Type col);
 
-// フィールド描画
-void displayField();
-
 // 描画の際に呼び出される関数
 void display();
 

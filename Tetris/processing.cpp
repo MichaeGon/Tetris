@@ -280,11 +280,11 @@ void hantei(int houkou, int x0, int y0){
 // 具体的には、スコア表示(displayScoreを使用)、ホールド表示(displayHold使用)、next表示(displayNext使用)と、フィールド上のブロックの描画をする。
 void inner_display()
 {
-	displayScore(tensuu); // 引数にスコアを渡してください
-	displayHold(z_L);
-	displayNext(z_R[0], z_R[1], z_R[2]);
+	displayScore(tensuu); // スコア描画
+	displayHold(z_L); // ホールド描画
+	displayNext(z_R[0], z_R[1], z_R[2]); // next描画
 
-	// ここに描画の処理を書く
+	// フィールド上のブロック描画
 	int i, j;
 	for (i = 1; i <= 10; i++){
 		for (j = 1; j <= 20; j++){
