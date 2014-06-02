@@ -56,10 +56,6 @@ const int Block[][4][4] = {
 // 色指定用列挙体
 // 最後はInvalidとする。Invalidを引数に与えた時の挙動は保証しない
 enum color { Black, Gray, Aqua, Yellow, Green, Red, Blue, Orange, Purple, Invalid };
-// 色配列
-extern double colors[][3];
-// １段階暗い色
-extern double colors2[][3];
 
 // タイトル
 extern char* title;
