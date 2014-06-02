@@ -52,7 +52,6 @@ const unsigned zrnum = 1;
 namespace {
 	char* numbers = "0123456789";
 
-	int crdnt = 0;
 
 	int hairetsu[2][12][22]; 
 	int Block[7][4][4] = {
@@ -391,12 +390,6 @@ void display()
 // ここにアニメーション処理や時間経過による再描画処理を書く
 void timer(int value)
 {
-	// ここに処理を書く
-	
-	// 以下サンプル
-	if (++crdnt >= height) {
-		crdnt = 0;
-	}
 	glutTimerFunc(500, timer, 0); // 次のタイマー
 
 	hantei(GLUT_KEY_DOWN, SENTINEL, SENTINEL);
@@ -560,14 +553,10 @@ void omitNext(int next, int num)
 
 void displayNext(int next, ...)
 {
-	int i = 1;
-	if (next >= Black && next < Invalid) {
-		omitNext(next, i);
-	}
-
 	va_list ap;
-	for (va_start(ap, next); i < zrnum; i++) {
-		int arg = va_arg(ap, int);
+	va_start(ap, next);
+	for (int i = 0; i < zrnum; i++) {
+		int arg = i ? va_arg(ap, int) : next;
 		if (arg >= Black && arg < Invalid) {
 			omitNext(arg, i + 1);
 		}
