@@ -1,4 +1,6 @@
 #include <iostream>
+#include <fstream>
+#include <string>
 #include <cstdlib>
 #include <ctime>
 #include <GL/glut.h>
@@ -6,6 +8,8 @@
 using namespace std;
 
 int msec = 500;
+
+string name;
 
 namespace {
 	int hairetsu[2][12][22];
@@ -18,6 +22,24 @@ namespace {
 	int tensuu;//点数を入れる変数。
 	int counter;//今落ちてるのは何個目のミノか。
 	int counter2;//ホールドされてるのは何個目のミノか。
+}
+
+void record()
+{
+	string highs;
+	string highn;
+	int h = 0;
+	ifstream ifs("score.dat", ios::binary);
+	if (ifs) {
+		getline(ifs, highn);
+		getline(ifs, highs);
+		h = atoi(highs.c_str());
+	}
+
+	ofstream ofs("score.dat", ios::binary);
+	if ((h!=0 && tensuu>h) || h==0) {
+		ofs << name << endl << tensuu << endl;
+	}
 }
 
 int Judge(){
@@ -141,6 +163,7 @@ void makeBlock(){
 	}
 	if (Judge() == 1){
 		cout << "GameOver!" << "\n" << tensuu << "点でした！";
+		record();
 		exit(0);
 	}
 	dyuma_flag[0] = 1;

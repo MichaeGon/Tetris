@@ -1,3 +1,5 @@
+#include <fstream>
+#include <string>
 #include <cstdarg>
 #include <cstdlib>
 #include <GL/glut.h>
@@ -66,6 +68,7 @@ void display()
 
 	glClear(GL_COLOR_BUFFER_BIT);
 	displayField();
+	displayHighScore();
 	
 	inner_display();
 
@@ -245,4 +248,46 @@ void displayNext(int next, ...)
 		}
 	}
 	va_end(ap);
+}
+
+void displayHighScore()
+{
+	ifstream ifs("score.dat", ios::binary);
+	string highn, highs;
+	int h = 0;
+	if (ifs) {
+		getline(ifs, highn);
+		getline(ifs, highs);
+		h = atoi(highs.c_str());
+	}
+
+	int pos = 17;
+	displayFrame("HIGHEST", pos, true, false);
+
+	glColor3dv(colors[Black]);
+	glRasterPos2d(size * 3 / 5, size);
+
+	int num[size] = { 0 };
+	for (int i = 1; i < size; i++) {
+		num[i] = SENTINEL;
+	}
+	int i;
+	for (i = 0; h; i++) {
+		num[i] = h % 10;
+		h /= 10;
+	}
+	if (i) {
+		i--;
+	}
+
+	glRasterPos2d(size * 2, (pos + 8.0 / 5.0)*size);
+	for (const char* str = highn.c_str(); *str; str++) {
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *str);
+	}
+
+	pos++;
+	glRasterPos2d(size * 2, (pos + 9.0 / 5.0)*size);
+	while (i >= 0) {
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, numbers[num[i--]]);
+	}
 }

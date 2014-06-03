@@ -1,6 +1,9 @@
 #ifndef ___COMMONHEADER___
 #define ___COMMONHEADER___
 
+#include <string>
+using namespace std;
+
 // 番兵
 const int SENTINEL = -1;
 
@@ -68,6 +71,9 @@ extern char* title;
 // 何ミリ秒ごとに落ちてくるか
 extern int msec;
 
+// ご芳名
+extern string name;
+
 
 // 内部処理側で描画すべきものを入れる関数
 // スコアの表示、HOLDの表示、NEXTの表示とフィールド上のブロック描画を担当する。
@@ -89,6 +95,9 @@ void displayHold(int num);
 // 引数は次に落ちてくるブロック、その次に落ちてくるブロック・・・といくつも指定できる。
 // 引数に何も指定しなかった場合はnextが非表示になる
 void displayNext(int next = SENTINEL, ...);
+
+// HIGH-SCORE表示用
+void displayHighScore();
 
 // キーボード(通常)
 void keyboard(unsigned char key, int x, int y);
