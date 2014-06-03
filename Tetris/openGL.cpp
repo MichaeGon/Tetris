@@ -281,7 +281,8 @@ void displayHighScore()
 	}
 
 	glRasterPos2d(size * 2, (pos + 8.0 / 5.0)*size);
-	for (const char* str = highn.c_str(); *str; str++) {
+	int count = 0;
+	for (const char* str = highn.c_str(); *str && count < 10; str++, count++) {
 		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *str);
 	}
 
