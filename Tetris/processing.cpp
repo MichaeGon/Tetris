@@ -40,6 +40,9 @@ void record()
 	if ((h!=0 && tensuu>h) || h==0) {
 		ofs << name << endl << tensuu << endl;
 	}
+	else {
+		ofs << highn << endl << h << endl;
+	}
 }
 
 int Judge(){
