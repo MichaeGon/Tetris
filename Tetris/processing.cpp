@@ -296,9 +296,6 @@ void hantei(int houkou, int x0, int y0){
 		}
 	}
 
-
-	
-
 	for (int i = 0; i < 4; i++){
 		for (int j = 0; j < 4; j++){
 			if (BlockMove[i][j]){
@@ -337,7 +334,6 @@ void inner_display()
 							bottom++;
 						}
 						decide = 1;
-						break;
 					}
 				}
 				if (decide == 1){
@@ -350,6 +346,14 @@ void inner_display()
 			}
 			else{
 				bottom++;
+			}
+		}
+	}
+	for (int i = 0; i < 4; i++){
+		for (int j = 0; j < 4; j++){
+			if (BlockMove[i][j] != Black && (hairetsu[1][i + x][j + bottom] >Black )){
+				bottom--;
+				break;
 			}
 		}
 	}
