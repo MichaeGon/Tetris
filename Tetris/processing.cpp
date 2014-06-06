@@ -230,7 +230,6 @@ void Del_Judge(){
 	cout << "\n" << tensuu;
 }
 
-int bottom2; //非常にまずいグローバル変数で渡してます！　どうにかしないと・・・
 
 void hantei(int houkou, int x0, int y0){
 	switch (houkou) {
@@ -298,40 +297,6 @@ void hantei(int houkou, int x0, int y0){
 	}
 
 
-	// ゴーストブロック表示テスト
-
-	// ゴーストブロックの処理
-	int bottom = y;
-	if (z_C >=0){
-		while (true){
-			bool decide = 0;
-			for (int i = 0; i < 4; i++){
-				for (int j = 0; j < 4; j++){
-					if (BlockMove[i][j] != Black&&(hairetsu[1][i + x][j + bottom] >Black||j+bottom>19)){
-						if (j + bottom > 19 && hairetsu[1][i + x][j + bottom] <=Black){
-							bottom++;
-						}
-						decide = 1;
-						break;
-					}
-				}
-				if (decide == 1){
-					break;
-				}
-			}
-			if (decide == 1){
-				bottom--;
-				break;
-			}
-			else{
-				bottom++;
-			}
-		}
-	}
-	cout << bottom<<"\n";
-	
-	bottom2 = bottom;
-	
 	
 
 	for (int i = 0; i < 4; i++){
@@ -359,11 +324,40 @@ void inner_display()
 	displayNext(z_R[0], z_R[1], z_R[2]); // next描画
 
 
+
+	// ゴーストブロックの処理
+	int bottom = y;
+	if (z_C >= 0){
+		while (true){
+			bool decide = 0;
+			for (int i = 0; i < 4; i++){
+				for (int j = 0; j < 4; j++){
+					if (BlockMove[i][j] != Black && (hairetsu[1][i + x][j + bottom] >Black || j + bottom>19)){
+						if (j + bottom > 19 && hairetsu[1][i + x][j + bottom] <= Black){
+							bottom++;
+						}
+						decide = 1;
+						break;
+					}
+				}
+				if (decide == 1){
+					break;
+				}
+			}
+			if (decide == 1){
+				bottom--;
+				break;
+			}
+			else{
+				bottom++;
+			}
+		}
+	}
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
 			if (BlockMove[i][j] == Black) continue;
 
-			displayGhostBlock(i + x - 1, j + bottom2 - 1, BlockMove[i][j]);
+			displayGhostBlock(i + x - 1, j + bottom - 1, BlockMove[i][j]);
 		}
 	}
 
