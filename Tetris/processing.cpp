@@ -353,11 +353,13 @@ void inner_display()
 			}
 		}
 	}
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			if (BlockMove[i][j] == Black) continue;
+	if (y <= bottom){
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				if (BlockMove[i][j] == Black) continue;
 
-			displayGhostBlock(i + x - 1, j + bottom - 1, BlockMove[i][j]);
+				displayGhostBlock(i + x - 1, j + bottom - 1, BlockMove[i][j]);
+			}
 		}
 	}
 
