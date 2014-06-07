@@ -39,6 +39,9 @@ void record()
 
 	ofstream ofs(file, ios::binary);
 	if ((h!=0 && tensuu>h) || h==0) {
+		cout << "\a\nハイスコア更新！\nYour name : ";
+		cin >> name;
+
 		ofs << name << endl << tensuu << endl;
 	}
 	else {
