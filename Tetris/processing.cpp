@@ -10,6 +10,7 @@ using namespace std;
 int msec = 500;
 
 string name;
+char* file = "score.dat";
 
 namespace {
 	int hairetsu[2][12][22];
@@ -29,14 +30,14 @@ void record()
 	string highs;
 	string highn;
 	int h = 0;
-	ifstream ifs("score.dat", ios::binary);
+	ifstream ifs(file, ios::binary);
 	if (ifs) {
 		getline(ifs, highn);
 		getline(ifs, highs);
 		h = atoi(highs.c_str());
 	}
 
-	ofstream ofs("score.dat", ios::binary);
+	ofstream ofs(file, ios::binary);
 	if ((h!=0 && tensuu>h) || h==0) {
 		ofs << name << endl << tensuu << endl;
 	}

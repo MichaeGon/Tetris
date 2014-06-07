@@ -74,6 +74,9 @@ extern int msec;
 // ご芳名
 extern string name;
 
+// ファイル名
+extern char* file;
+
 
 // 内部処理側で描画すべきものを入れる関数
 // スコアの表示、HOLDの表示、NEXTの表示とフィールド上のブロック描画を担当する。

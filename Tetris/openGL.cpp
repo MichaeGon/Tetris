@@ -252,7 +252,7 @@ void displayNext(int next, ...)
 
 void displayHighScore()
 {
-	ifstream ifs("score.dat", ios::binary);
+	ifstream ifs(file, ios::binary);
 	string highn, highs;
 	int h = 0;
 	if (ifs) {
