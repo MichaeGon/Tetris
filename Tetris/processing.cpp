@@ -230,6 +230,7 @@ void Del_Judge(){
 	cout << "\n" << tensuu;
 }
 
+
 void hantei(int houkou, int x0, int y0){
 	switch (houkou) {
 	case GLUT_KEY_UP: // 上キー
@@ -295,8 +296,6 @@ void hantei(int houkou, int x0, int y0){
 		}
 	}
 
-	
-
 	for (int i = 0; i < 4; i++){
 		for (int j = 0; j < 4; j++){
 			if (BlockMove[i][j]){
@@ -321,29 +320,44 @@ void inner_display()
 	displayHold(z_L); // ホールド描画
 	displayNext(z_R[0], z_R[1], z_R[2]); // next描画
 
-	// ゴーストブロック表示テスト
-	int bottom = 20;
-	while (true) {
-		bool decide = true;
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 4; j++) {
-				if ((BlockMove[i][j]>Black && j + bottom>20) || (hairetsu[0][i + x][j + bottom]>Black && BlockMove[i][j]>Black)) {
-					decide = false;
+
+
+	// ゴーストブロックの処理
+	int bottom = y;
+	if (z_C >= 0){
+		while (true){
+			bool decide = 0;
+			for (int i = 0; i < 4; i++){
+				for (int j = 0; j < 4; j++){
+					if (BlockMove[i][j] != Black && (hairetsu[1][i + x][j + bottom] >Black || j + bottom>19)){
+						if (j + bottom > 19 && hairetsu[1][i + x][j + bottom] <= Black){
+							bottom++;
+						}
+						decide = 1;
+					}
+				}
+				if (decide == 1){
 					break;
 				}
 			}
-			if (!decide) {
+			if (decide == 1){
+				bottom--;
+				break;
+			}
+			else{
+				bottom++;
+			}
+		}
+	}
+	for (int i = 0; i < 4; i++){
+		for (int j = 0; j < 4; j++){
+			if (BlockMove[i][j] != Black && (hairetsu[1][i + x][j + bottom] >Black )){
+				bottom--;
 				break;
 			}
 		}
-		if (decide) {
-			break;
-		}
-		else {
-			bottom--;
-		}
 	}
-	if (y <= bottom) {
+	if (y <= bottom){
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
 				if (BlockMove[i][j] == Black) continue;
@@ -352,7 +366,6 @@ void inner_display()
 			}
 		}
 	}
-	
 
 	// フィールド上のブロック描画
 	for (int i = 1; i <= 10; i++){
