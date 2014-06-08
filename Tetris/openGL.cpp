@@ -4,6 +4,7 @@
 #include <cstdarg>
 #include <cstdlib>
 #include <GL/glut.h>
+#include "ScoreFileError.h"
 #include "common.h"
 using namespace std;
 
@@ -256,20 +257,21 @@ void displayHighScore()
 	ifstream ifs(file, ios::binary);
 	string highn, highs;
 	int h = 0;
-	if (ifs) {
-		getline(ifs, highn);
-		getline(ifs, highs);
-		h = atoi(highs.c_str());
+	try {
+		if (ifs) {
+			getline(ifs, highn);
+			getline(ifs, highs);
+			h = atoi(highs.c_str());
+		}
+
+		if (h % 10){
+			throw ScoreFileError();
+		}
+	}
+	catch (ScoreFileError& error) {
+		error.handling();
 	}
 	
-	if (h % 10){
-		cout << "このセーブデータは不正です\n";
-		while (!getchar()){}
-
-		ofstream ofs(file, ios::binary);
-		ofs;
-		exit(1);
-	}
 
 	int pos = 17;
 	displayFrame("HIGHEST", pos, true, false);
