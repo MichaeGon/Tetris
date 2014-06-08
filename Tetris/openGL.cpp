@@ -262,12 +262,12 @@ void displayHighScore()
 	}
 	
 	if (h % 10){
-		printf("このセーブデータは不正です\n");
+		cout << "このセーブデータは不正です\n";
 		while (!getchar()){}
 
 		ofstream ofs(file, ios::binary);
-		ofs  ;
-		exit(0);
+		ofs;
+		exit(1);
 	}
 
 	int pos = 17;
