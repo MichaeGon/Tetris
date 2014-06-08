@@ -13,13 +13,14 @@ public:
 	ScoreFileError()
 	{
 		message = "\aこのセーブデータは不正です。\n終了します。何か入力してください：";
-		cout << message;
 	}
 
 	~ScoreFileError() {};
 
 	void handling()
 	{
+		cout << message;
+
 		while (!getchar());
 
 		ofstream ofs(file, ios::binary);

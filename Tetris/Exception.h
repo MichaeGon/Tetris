@@ -12,11 +12,11 @@ class Exception
 protected:
 	string message;
 public:
+
+	// メッセージなど変数の初期化を行う場所
 	Exception()
 	{
 		message = "\aエラー発生時に表示するメッセージを入力すること。\n";
-		// 同時にエラー出力もできます
-		cout << message;
 	}
 
 	virtual ~Exception() {};
