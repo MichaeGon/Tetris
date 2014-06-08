@@ -260,13 +260,22 @@ void displayHighScore()
 		getline(ifs, highs);
 		h = atoi(highs.c_str());
 	}
+	
+	if (h % 10){
+		printf("このセーブデータは不正です\n");
+		while (!getchar()){}
+
+		ofstream ofs(file, ios::binary);
+		ofs  ;
+		exit(0);
+	}
 
 	int pos = 17;
 	displayFrame("HIGHEST", pos, true, false);
 
 	glColor3dv(colors[Black]);
 	glRasterPos2d(size * 3 / 5, size);
-
+	
 	int num[size] = { 0 };
 	for (int i = 1; i < size; i++) {
 		num[i] = SENTINEL;
