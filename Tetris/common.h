@@ -1,9 +1,6 @@
 #ifndef ___COMMONHEADER___
 #define ___COMMONHEADER___
 
-#include <string>
-using namespace std;
-
 // 番兵
 const int SENTINEL = -1;
 
@@ -70,9 +67,6 @@ extern char* title;
 
 // 何ミリ秒ごとに落ちてくるか
 extern int msec;
-
-// ご芳名
-extern string name;
 
 // ファイル名
 extern char* file;
