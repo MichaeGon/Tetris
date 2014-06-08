@@ -1,4 +1,3 @@
-#include <iostream>
 #include <GL/glut.h>
 #include "common.h"
 using namespace std;
